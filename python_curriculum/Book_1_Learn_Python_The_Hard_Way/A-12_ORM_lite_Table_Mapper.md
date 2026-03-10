@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Object-Relational Mappers (ORMs) like SQLAlchemy or Django's ORM translate raw SQL database tables into Python objects, allowing developers to query databases using Python constructs instead of handwriting SQL text.
-**Task**: Build a mini-ORM structure in pure Python mapping to an in-memory database (a list of dictionaries). You will create a generic `Table` class with `insert()`, `select(where={})`, `update(where={}, set_data={})`, and `delete(where={})` operations.
-**Constraints**: Do **NOT** connect to SQLite or use any database libraries. The internal data store must be a `list of dicts` attached to the class instance. The `where` clause is a simple exact-match dictionary.
-
+**Context**: Tự viết ORM giúp Engineer hiểu sâu hơn về Metaclasses, Data Descriptors và Object-Relational Mapping (ORM) – công nghệ xương sống của Django/SQLAlchemy.
+**Task**: Cài đặt một mini-ORM hỗ trợ mapping một Class Python (Model) thành câu lệnh SQL DDL cơ bản và tính năng `.save()` để sinh chuỗi SQL Insert raw theo schema.
+**Constraints**: Không dùng bất kì framework ORM nào có sẵn. Phải dùng Metaclass (`__new__`, `__init__`) để thu thập thông tin Fields của class lúc định nghĩa.
 ## 2. STARTER CODE
 
 ```python
@@ -100,8 +99,7 @@ def delete(self, where: dict) -> int:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `SQLAlchemy`, `Django ORM`, `Peewee`, `Tortoise ORM`.
-- **Why do it manually**: ORMs often act as a mysterious layer that developers fight against when queries become slow. Understanding how conditions translate to iteration/matching demystifies concepts like table scans versus indexed lookups, and prepares you for NoSQL databases which inherently use this exact `{key: value}` finding syntax (like MongoDB).
+- **Libraries/Tools**: `SQLAlchemy`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Big Data is common. Attempting to parse a 5GB CSV file containing transaction records line-by-line using `readlines()` will violently crash your server's RAM (Out Of Memory Exception). Instead, we process data in "chunks" (streams) using Generators, calculating what we need mathematically without ever holding the full text in memory.
-**Task**: Write a Python script that creates a fake 100,000-line CSV file. Then, process it calculating the sum, average, and row count of a generic "amount" column. You must read the file in chunks of exactly 1,000 lines at a time. Do this using Python's `yield` memory-efficient generators.
-**Constraints**: You **CANNOT** use `pandas`, `csv`, or `sys.getsizeof` to solve the actual processing task. Only Python basic generators or the `itertools.islice` module are permitted to chunk the rows.
-
+**Context**: Data Analysts thường phải xử lý tập tin csv/json siêu lớn (hàng chục GB) nhưng backend chỉ có 512MB RAM. Kỹ thuật Chunking Data Stream là bắt buộc.
+**Task**: Viết một trình nạp dữ liệu (File Processor) đọc file siêu lớn bằng cách chia file thành các phần nhỏ (Chunking). Ở mỗi chunk, lọc ra các thông tin hợp lệ rồi ghi nối đuôi (append) vào file output.
+**Constraints**: 100% không dùng `pandas`. Độ phức tạp không gian (Space Complexity) phải là O(1) hoặc O(chunk_size).
 ## 2. STARTER CODE
 
 ```python
@@ -99,8 +98,7 @@ def process_large_file(filename: str) -> dict:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `pandas` chunksize argument (`read_csv(chunksize=1000)`), PySpark, Apache Airflow ETL workers, Dask.
-- **Why do it manually**: Often when querying a third-party AWS S3 file, pulling it all into a Pandas dataframe crashes the worker node container inside Kubernetes because container RAM is strictly capped. Understanding `yield` saves massive server infrastructure costs by doing stream-based ETL.
+- **Libraries/Tools**: `pandas`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 

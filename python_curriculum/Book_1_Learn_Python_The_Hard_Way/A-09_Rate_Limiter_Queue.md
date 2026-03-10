@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: API services must defend themselves against abuse and DDoS attacks. One fundamental defense layer is the "Token Bucket" or "Leaky Bucket" rate limiting algorithm. Instead of outright banning users who make too many requests instantly, we hold requests in a queue and slowly execute them at a controlled FIFO rate, allowing traffic to smooth out elegantly.
-**Task**: Build a FIFO (First-In, First-Out) queuing rate limiter algorithm using plain Python Lists. It enforces a strict maximum of processing N requests per second. If simulated requests come in faster than N, they must be delayed in a queue and processed smoothly via `time.sleep()`. Print the timestamp of each processed request.
-**Constraints**: Do **NOT** use `collections.deque`, `queue.Queue`, or `asyncio`. Rely entirely on List appends/pops and the `time` module.
-
+**Context**: Các API công khai như OpenAI hay Stripe luôn giới hạn requests (Rate Limits). Tích hợp một hàng đợi (Queue) tự giới hạn là cách bảo vệ hệ thống không bị ban IP hoặc gián đoạn dịch vụ.
+**Task**: Thiết kế một bộ quản lý Hàng đợi (Token Bucket hoặc Leaky Bucket algorithm). Đảm bảo rằng ứng dụng chỉ được phép phát n requests / giây kể cả khi số lượng task nạp vào cực kỳ lớn.
+**Constraints**: Triển khai trên cơ sở `asyncio` hoặc `threading`. Đảm bảo độ trễ giữa các request không bị lệch quá lớn do sai số thread context-switch.
 ## 2. STARTER CODE
 
 ```python
@@ -95,12 +94,12 @@ def process_queue(self) -> None:
 ## 5. VALIDATION CRITERIA
 
 - [ ] Successfully uses lists as a FIFO queue (using `pop(0)`).
-- [ ] Correctly computes the fractional delay based on exactly when the _last_ transaction fired, rather than blindly sleeping.
+- [ ] Correctly [...] _last_ transaction fired, rather than blindly sleeping.
 - [ ] Assert calculation: Passing 5 tasks at a 2-task-per-second limit strictly results in a runtime of $>2.0$ seconds.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (True Token Bucket):** Currently, the limiter delays rigidly between _every_ request. Change it to a Token Bucket. The bucket holds exactly $X$ tokens. Tokens refill at the N/sec rate. This allows processing a sudden burst of requests immediately, before strictly slowing them down.
+1. **Extension 1 (True Token Bucket):** Currently, the limiter delays rigidly between _every_ request. Change it to a Token Bucket. The bucket holds exactly $X$ tokens. Tokens refill at the N/sec rate. This [...], before strictly slowing them down.
 2. **Extension 2 (Optimize Data Structure):** Replace the native List (`queue`) with `collections.deque`. List's `pop(0)` takes $O(N)$ time, whereas Deque's `popleft()` takes $O(1)$ time. Run a `timeit` script with a queue size of 100,000 requests to prove Deque's superiority.
 3. **Extension 3 (Multithreading Context):** Try placing the `process_queue()` function onto a background `Thread`. Now have a `while True` loop sporadically feeding `add_request()` bursts. You'll quickly see why List queue limits are dangerous without thread `Locks()`.
 

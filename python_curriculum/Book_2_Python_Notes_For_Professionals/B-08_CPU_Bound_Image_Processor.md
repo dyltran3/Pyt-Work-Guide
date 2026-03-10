@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Asyncio (Exercise B-07) and Threading are incredible for Network waiting (I/O). But if you try to utilize them for pure mathematics or image processing, Python's Global Interpreter Lock (GIL) fundamentally intervenes natively choking the execution down to a single physical CPU core. To utilize all 8 cores on modern hardware for heavy calculations, you need the `multiprocessing` library.
-**Task**: Write an Image Processor natively simulating CPU-Bound execution explicitly safely. The script generates 100 "mock" heavy tasks (using a mathematical loop simulation like `sum(i*i for i in range(10**6))`). Process the array sequentially to measure purely native time length natively globally. Then, process it utilizing `multiprocessing.Pool` mapping identical functions dynamically to parallel cores natively significantly decreasing identical operations visually accurately.
-**Constraints**: You **CANNOT** use threading dynamically globally. Utilize strictly `multiprocessing` continuously safely evaluating math natively avoiding the GIL.
-
+**Context**: Trong khi I/O Bound dùng Async, bài toán biến đổi Image/Tensor lại bị giới hạn rào cản GIL do CPU-bound intensive. Đa tiến trình là giải pháp song song (Parallelism) thực thụ.
+**Task**: Chạy giả lập các phép nhân ma trận cường độ cao trên Image pixels. Thiết kế Pool tiến trình song song để phân chia tải.
+**Constraints**: Dùng `multiprocessing` package. Không dùng thead vì sẽ gặp hiện tượng GIL lock bottleneck.
 ## 2. STARTER CODE
 
 ```python
@@ -50,7 +49,7 @@ if __name__ == "__main__":
     print(f"Sequential: {seq_duration:.2f} seconds")
 
     # Notice: Multiprocessing on Windows requires the script execution
-    # to be carefully guarded beneath the __main__ block natively structurally.
+    # [...] __main__ block [... logic ...] 
 
     print("\\nTesting Multiprocessing...")
     start_par = time.time()
@@ -67,10 +66,10 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-Sequential processing natively functionally utilizes `[heavy_image_filter_simulation(i) for i in task_ids]` natively safely.
+Sequential processing [... logic ...] `[heavy_image_filter_simulation(i) for i in task_ids]` [... logic ...] 
 
 **HINT-2 (Partial)**:
-`multiprocessing.Pool` implements a context manager `with` systematically ensuring processes die safely terminating naturally organically shutting down zombies natively.
+`multiprocessing.Pool` implements a context manager `with` [...] [... logic ...] 
 
 ```python
 from multiprocessing import Pool, cpu_count
@@ -78,29 +77,28 @@ from multiprocessing import Pool, cpu_count
 def process_parallel(task_ids):
     cores = cpu_count()
     with Pool(processes=cores) as pool:
-        # Map acts exactly like list comprehension but magically distributes tasks continuously
+        # Map [...]
         results = pool.map(heavy_image_filter_simulation, task_ids)
     return results
 ```
 
 **HINT-3 (Near-solution)**:
-The provided `process_parallel` is essentially the complete solution geometrically natively. Ensure the `if __name__ == "__main__":` block encapsulates executing natively inherently avoiding massive fork-bomb recursion loops naturally safely exclusively on Windows operating systems locally.
+The provided `process_parallel` is essentially the complete solution [... logic ...] `if __name__ == "__main__":` block encapsulates executing [... logic ...] -bomb recursion loops [... logic ...] 
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Celery` task workers, `gunicorn -w 4` (worker count scaling API throughput natively), PyTorch DataLoaders.
-- **Why do it manually**: New developers mistakenly use `threading` to speed up CPU-heavy logic (like ML training or resizing images) locally causing the script to ironically run slower functionally due to GIL context switching natively perfectly significantly.
+- **Libraries/Tools**: `Celery`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Bypasses execution natively significantly reducing structural clock-time heavily efficiently globally.
-- [ ] Executes cleanly utilizing `pool.map` evaluating outputs equivalently structurally natively reliably globally cleanly.
+- [ ] Bypasses execution [... logic ...] -time [... logic ...] 
+- [ ] Executes cleanly utilizing `pool.map` evaluating outputs [... logic ...] 
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Chunk Sizing):** The `pool.map` method dynamically accepts a `chunksize` argument evaluating internally. If tasks execute insanely fast (like 1ms), the IPC (Inter-Process Communication) overhead sending the tasks to the cores is slower than the actual math functionally natively. Experiment explicitly assigning `chunksize=5` observing clock time impacts gracefully seamlessly cleanly.
-2. **Extension 2 (Exception Masking):** What happens if `heavy_image_filter_simulation` throws a `ValueError` dynamically midway? The entire pool crashes natively globally cleanly. Introduce `.imap_unordered` wrapping `try/except` locally natively continuously.
-3. **Extension 3 (Actual Pixels):** Remove the simulation completely explicitly. Import `PIL` (Pillow). Utilize Python `glob` gathering 100 `.jpg` images natively recursively, utilizing `multiprocessing` to apply `.convert('L')` (grayscale) actively saving them explicitly cleanly verifying CPU utilization visually via Task Manager.
+1. **Extension 1 (Chunk Sizing):** The `pool.map` method dynamically accepts a `chunksize` argument evaluating internally. If tasks execute insanely fast (like 1ms), the IPC (Inter-Process Communication) [...] [... logic ...] `chunksize=5` observing clock time impacts [... logic ...] 
+2. **Extension 2 (Exception Masking):** What happens if `heavy_image_filter_simulation` throws a `ValueError` dynamically midway? The entire pool crashes [... logic ...] `.imap_unordered` wrapping `try/except` [... logic ...] 
+3. **Extension 3 (Actual Pixels):** Remove the simulation [... logic ...] `PIL` (Pillow). Utilize Python `glob` gathering 100 `.jpg` images [... logic ...] `multiprocessing` to apply `.convert('L')` (grayscale) actively saving them [... logic ...] Task Manager.
 
 ## SETUP REQUIREMENTS
 

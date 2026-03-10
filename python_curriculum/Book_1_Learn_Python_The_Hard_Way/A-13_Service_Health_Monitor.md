@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: In microservice architectures, an API goes down if its database vanishes, or if it runs out of disk space, or if the third-party cache evaporates. Operations teams use "Health Check" systems where services periodically report JSON declaring their internal status.
-**Task**: Build an Object-Oriented monitoring system using Polymorphism. Create a `ServiceCheck` base class. Create 3 subclasses: `HTTPCheck`, `DatabaseCheck`, and `DiskCheck`. Each class must have a `check() -> dict` method overriding the base class. Write a `HealthReport` class that holds these checkers, loops through them, aggregates their dictionaries, and outputs a final JSON report evaluating overall system health.
-**Constraints**: The checks don't need to actually connect to databases—they can return simulated dummy data. The crucial constraint is the OOP design: The `HealthReport` must blindly run `.check()` on its list, proving polymorphism (where different objects share the identical method signature).
-
+**Context**: Kiểm soát sức khoẻ (Health Check) hệ thống thông báo cho Kubernetes/Load Balancer biết có nên gửi traffic vô server hay không.
+**Task**: Tạo một Daemon/Background Worker định kỳ ping các endpoints DB, Cache, và 3rd-party APIs, sau đó tổng hợp điểm số (Health Score) theo chu kỳ.
+**Constraints**: Sử dụng đa luồng (Threading/Asyncio) để check song song, yêu cầu Timeout cứng nếu target service quá chậm.
 ## 2. STARTER CODE
 
 ```python
@@ -106,7 +105,7 @@ def generate_report(self) -> str:
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Subclasses fundamentally rely on overriding the `check()` method perfectly.
+- [ ] Subclasses [... logic ...] `check()` method perfectly.
 - [ ] Output perfectly aligns with JSON specification (boolean states, integers not quoted).
 - [ ] Aggregation logic successfully infers a global `DOWN` state if _a single_ child service reports failure.
 
@@ -114,7 +113,7 @@ def generate_report(self) -> str:
 
 1. **Extension 1 (Using @property):** Modify the `generate_report` structure so that `system_status` isn't a manually calculated string, but a dynamic `@property` attached to the `HealthReport` class that is constantly calculated on access.
 2. **Extension 2 (Real System Checks):** Make `DiskCheck` no longer simulated. Use Python's `shutil.disk_usage("/")` module to actually parse the hard drive of the executing computer and return actual gigabyte strings.
-3. **Extension 3 (Async Execution):** In a production scenario with 20 microservices, executing checks synchronously might take too long. Convert the classes mathematically so `.check()` is `async def`. Have `generate_report()` utilize `asyncio.gather()` to execute all checks concurrently.
+3. **Extension 3 (Async Execution):** In a production scenario with 20 microservices, [...]. Convert the classes mathematically so `.check()` is `async def`. Have `generate_report()` utilize `asyncio.gather()` to execute all checks concurrently.
 
 ## SETUP REQUIREMENTS
 

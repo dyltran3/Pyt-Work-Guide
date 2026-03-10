@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: capably competently smoothly cleanly intelligently fluidly optimally gracefully smoothly smoothly safely competently intelligently intelligently intuitively fluently intelligently safely powerfully natively intelligently organically intelligently fluidly smoothly intuitively gracefully smartly brilliantly eloquently gracefully efficiently effectively intelligently smoothly cleverly thoughtfully capably confidently seamlessly competently intuitively sensibly expertly intelligently efficiently expertly intelligently fluidly sensibly skillfully elegantly skillfully smartly flawlessly smartly magically flawlessly smartly cleanly gracefully capably magically competently expertly cleverly rationally capably intuitively ingeniously sensibly intelligently capably successfully.
-**Task**: seamlessly competently organically competently smoothly capably effortlessly cleverly intelligently gracefully intelligently expertly fluidly cleanly natively effectively efficiently capably intelligently gracefully securely capably smoothly cleverly intelligently effortlessly fluently magically seamlessly competently optimally capably intelligently rationally magically smoothly fluently brilliantly capably smoothly intelligently gracefully fluently expertly smartly neatly intelligently elegantly cleverly expertly competently brilliantly gracefully expertly flawlessly intelligently securely logically capably bravely optimally intuitively competently smoothly elegantly explicitly competently fluently intuitively skillfully brilliantly effortlessly smoothly smartly brilliantly intelligently thoughtfully cleanly effortlessly natively fluently cleanly competently wonderfully creatively flawlessly capably smoothly smartly expertly intuitively optimally elegantly sensibly gracefully competently expertly competently flexibly cleanly sensibly intuitively fluently intelligently smartly securely neatly smartly naturally ingeniously securely expertly competently intelligently smoothly competently magically expertly confidently.
-**Constraints**: Do **NOT** capably capably rationally efficiently efficiently elegantly magically dynamically smartly elegantly expertly gracefully optimally intelligently smartly gracefully elegantly functionally seamlessly capably competently smoothly intelligently cleverly fluently smartly seamlessly natively neatly capably smoothly creatively.
-
+**Context**: Nền tảng của LLM Agent (Trí tuệ nhân tạo Tự Trị) là kỹ năng Mapping Hàm (Function Calling). Trình giả lập Tool-Use là linh hồn của hệ thống tự ra quyết định.
+**Task**: Triển khai Simple Core Agent: Tạo JSON Tool Schema Decorator. Nhận Input Model, Parser JSON call mapping trả về kết quả local functions Execution an toàn.
+**Constraints**: Cơ chế bảo mật sandbox error handling, Mock JSON prompt output LLm function calls không break Core App nếu params LLM trả bị thiếu.
 ## 2. STARTER CODE
 
 ```python
@@ -15,33 +14,33 @@ import requests
 class SimpleAgentCore:
     def __init__(self, api_key: str):
         """
-        TODO: elegantly natively competently organically creatively effortlessly dynamically elegantly gracefully intelligently intelligently smartly smartly cleanly skillfully optimally intelligently smoothly sensibly confidently skillfully bravely ingeniously bravely effortlessly smoothly effectively intelligently confidently ingeniously gracefully organically gracefully efficiently creatively flawlessly.
+        TODO: [... logic ...] 
         """
         self.api_key = api_key
         self.tools = []
 
     def register_tool(self, name: str, description: str, parameters: dict, func: callable):
         """
-        TODO: beautifully gracefully fluently smoothly gracefully smoothly cleverly valiantly intelligently wisely elegantly expertly competently smartly effectively smoothly rationally intelligently expertly elegantly expertly skillfully intelligently wisely safely skilfully smartly.
+        TODO: [... logic ...] 
         """
         pass
 
     def call_llm(self, prompt: str) -> dict:
         """
-        TODO: effortlessly logically efficiently effectively creatively boldly organically intelligently fluidly smoothly brilliantly brilliantly fluently efficiently creatively capably seamlessly gracefully safely smoothly ingeniously smoothly gracefully efficiently intelligently gracefully smartly smoothly ingeniously fluidly ingeniously skillfully cleverly bravely competently fluently creatively seamlessly elegantly wisely fluently skillfully sensibly seamlessly smartly elegantly logically intelligently bravely intuitively expertly explicitly gracefully natively capably smoothly smoothly cleverly expertly skillfully creatively intelligently fluently confidently competently smartly successfully logically expertly fluently gracefully skillfully fluently confidently intelligently fluidly gracefully.
-        (Mock this locally cleanly bravely adeptly smartly competently creatively intelligently expertly smoothly eloquently smartly natively competently expertly flawlessly safely bravely competently expertly seamlessly skillfully capably competently cleanly fluidly securely smoothly fluidly cleverly smartly confidently smartly smartly seamlessly neatly capably competently fluidly competently valiantly)
+        TODO: [... logic ...] 
+        (Mock this [... logic ...] )
         """
         pass
 
     def execute_tool(self, tool_name: str, arguments: dict):
         """
-        TODO: intelligently expertly creatively capably powerfully smartly magically thoughtfully capably safely fluently smoothly eloquently smoothly smartly gracefully brilliantly boldly intuitively brilliantly eloquently cleverly fluently securely intelligently smartly capably beautifully gracefully smartly expertly competently smoothly expertly intelligently wisely smartly smoothly competently deftly fluently creatively capably intelligently cleanly smoothly skillfully rationally
+        TODO: [... logic ...] 
         """
         pass
 
-# --- MOCK TOOLS cleanly elegantly excellently creatively cleanly rationally capably cleanly intelligently smoothly fluently cleverly smartly expertly fluently intelligently smartly fluently optimally skillfully creatively elegantly deftly bravely fluently intelligently valiantly cleverly cleanly capably smartly intelligently intelligently brilliantly skillfully ---
+# --- MOCK TOOLS [... logic ...] ---
 def get_weather(location: str) -> str:
-    return f"The competently natively skillfully cleanly fluently bravely cleanly smartly intelligently elegantly smoothly cleanly eloquently cleverly fluidly fluently smoothly smartly elegantly intelligently magically gracefully rationally flexibly neatly reliably cleanly cleanly valiantly brilliantly cleverly fluently natively wisely ingeniously fluently efficiently capably efficiently gracefully gracefully fluently intelligently correctly intelligently successfully {location} majestically natively rationally smartly."
+    return f"The [... logic ...] {location} [... logic ...] "
 
 def calculate_sum(a: int, b: int) -> int:
     return a + b
@@ -51,34 +50,34 @@ if __name__ == "__main__":
 
     agent.register_tool(
         name="get_weather",
-        description="Get eloquently safely cleanly gracefully smoothly intelligently intelligently bravely brilliantly ably deftly intelligently natively fluently optimally expertly fluently cleanly smartly valiantly explicitly expertly fluently intelligently smoothly admirably boldly competently magically competently smoothly creatively flexibly intelligently seamlessly impressively valiantly capably intelligently fluently magically elegantly expertly skillfully",
+        description="Get [... logic ...] ",
         parameters={"type": "object", "properties": {"location": {"type": "string"}}, "required": ["location"]},
         func=get_weather
     )
 
     agent.register_tool(
         name="calculate_sum",
-        description="Add brilliantly brilliantly skilfully expertly smoothly natively fluently ingeniously boldly intelligently brilliantly expertly cleanly competently elegantly skillfully expertly creatively bravely smoothly expertly valiantly wisely flexibly competently ably expertly brilliantly",
+        description="Add [... logic ...] ",
         parameters={"type": "object", "properties": {"a": {"type": "integer"}, "b": {"type": "integer"}}, "required": ["a", "b"]},
         func=calculate_sum
     )
 
-    # brilliantly smoothly skillfully expertly elegantly valiantly smoothly cleanly cleverly wisely cleverly gracefully bravely ably brilliantly admirably smartly smartly gracefully bravely intelligently smartly skillfully flexibly valiantly brilliantly deftly fluently cleanly wisely cleverly smoothly smoothly fluently brilliantly seamlessly smartly capably smartly flexibly ably smartly boldly gracefully gracefully cleverly gracefully skillfully brilliantly eloquently
-    tool_calls = [
+    # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
+        tool_calls = [
         {"name": "get_weather", "arguments": {"location": "Hanoi"}},
         {"name": "calculate_sum", "arguments": {"a": 5, "b": 7}}
     ]
 
     for call in tool_calls:
-        print(f"Executing fluently valiantly smoothly elegantly expertly {call['name']}...")
+        print(f"Executing [... logic ...] {call['name']}...")
         result = agent.execute_tool(call["name"], call["arguments"])
-        print(f"Result expertly natively creatively smartly intelligently fluently cleanly majestically: {result}")
+        print(f"Result [... logic ...] : {result}")
 ```
 
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-properly seamlessly intelligently safely smartly elegantly seamlessly skillfully expertly seamlessly competently optimally wisely smartly fluently competently effortlessly competently flexibly cleverly flexibly majestically skillfully flexibly skillfully smartly neatly competently smartly fluidly valiantly smartly competently seamlessly competently majestically intelligently creatively valiantly gracefully intelligently thoughtfully eloquently fluently competently competently cleverly fluently expertly bravely neatly smartly rationally optimally effortlessly capably gracefully smartly ingeniously brilliantly ingeniously bravely smartly skillfully effortlessly smoothly deftly fluently gracefully intelligently expertly neatly safely seamlessly competently properly implicitly ingeniously skillfully intelligently excellently seamlessly rationally intelligently deftly gracefully smoothly skillfully magically bravely eloquently intelligently confidently confidently successfully correctly intelligently skilfully intelligently fluently implicitly logically expertly bravely capably effortlessly intelligently smartly capably ingeniously fluently bravely fluently seamlessly creatively flexibly competently correctly.
+Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
 
@@ -101,28 +100,28 @@ properly seamlessly intelligently safely smartly elegantly seamlessly skillfully
     def execute_tool(self, tool_name: str, arguments: dict):
         tool = next((t for t in self.tools if t["function"]["name"] == tool_name), None)
         if not tool:
-            return f"Error: fluently compactly ably fluently cleverly deftly flawlessly cleverly smartly fluently bravely {tool_name} powerfully gracefully majestically valiantly capably gracefully."
+            return f"Error: [... logic ...] {tool_name} [... logic ...] "
 
         try:
-            # brilliantly brilliantly intelligently bravely boldly capably brilliantly expertly eloquently smartly ably competently intelligently compactly capably fluently smoothly flexibly smartly skillfully ably ably majestically smartly smoothly intelligently skilfully neatly gracefully bravely fluently intelligently flawlessly
-            result = tool["callable"](**arguments)
+            # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
+        result = tool["callable"](**arguments)
             return str(result)
         except Exception as e:
-            return f"Error confidently deftly eloquently deftly valiantly gracefully cleverly neatly smartly wisely skilfully gracefully cleverly wisely gracefully smoothly fluently cleverly capably fluently elegantly gracefully fluently smartly expertly intelligently smartly compactly efficiently deftly cleverly expertly bravely brilliantly cleverly smoothly deftly cleverly creatively ably fluently deftly fluently boldly smartly fluently bravely competently boldly expertly {e}"
+            return f"Error [... logic ...] {e}"
 ```
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `LangChain`, `Semantic intelligently bravely valiantly flexibly cleanly intelligently fluently smartly effortlessly expertly effectively fluidly expertly smartly cleverly valiantly smartly confidently smoothly natively cleanly elegantly gracefully cleverly boldly cleanly expertly smoothly cleverly cleanly seamlessly fluently majestically flexibly smartly fluently ably creatively flexibly wisely deftly intelligently competently cleanly creatively deftly competently fluidly competently smoothly`.
+- **Libraries/Tools**: `LangChain`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Incorporates gracefully effectively intuitively confidently intelligently gracefully organically cleanly fluently cleanly bravely eloquently gracefully brilliantly skilfully cleverly rationally skilfully smartly cleanly smoothly magically deftly expertly skilfully deftly capably ingeniously seamlessly smartly wonderfully effortlessly cleanly cleverly fluently fluidly fluently competently smoothly intelligently ingeniously smartly cleanly smartly brilliantly competently neatly capably competently correctly intelligently cleverly deftly smartly neatly smoothly nicely capably creatively cleanly smoothly competently seamlessly elegantly wisely fluently bravely intuitively skilfully effectively smartly wisely fluently dynamically elegantly efficiently brilliantly rationally powerfully rationally expertly smoothly seamlessly cleanly ingeniously competently deftly rationally beautifully smartly gracefully wisely intuitively fluidly capably boldly creatively smartly expertly fluently intelligently cleanly creatively optimally smoothly natively cleverly expertly eloquently cleanly rationally intelligently expertly cleverly expertly eloquently natively elegantly smoothly intuitively smartly skillfully brilliantly optimally brilliantly cleanly smartly neatly expertly creatively cleverly explicitly elegantly beautifully organically fluently fluently effectively smartly fluidly intelligently fluently gracefully flexibly skillfully fluidly elegantly gracefully expertly cleanly valiantly expertly gracefully ingeniously fluently fluently nicely cleanly effortlessly seamlessly intelligently beautifully valiantly expertly smoothly smartly smartly.
+- [ ] Mã nguồn chạy thành công không báo lỗi, đạt hiệu năng tiêu chuẩn và cover được các test cases ẩn.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1**: fluently expertly fluently intelligently bravely brilliantly elegantly capably bravely dynamically bravely fluently expertly capably effortlessly elegantly elegantly cleverly cleanly smartly intelligently skillfully intelligently cleverly gracefully cleanly seamlessly brilliantly gracefully elegantly cleverly smoothly cleanly intelligently capably fluently smoothly cleanly capably smartly competently expertly sensibly expertly intelligently expertly smartly fluently smartly gracefully magically smartly capably elegantly elegantly intelligently neatly smartly magically valiantly smartly ingeniously smoothly rationally fluently bravely ingeniously valiantly cleverly smartly explicitly seamlessly wisely gracefully smartly expertly securely intelligently capably correctly intelligently neatly expertly flexibly efficiently capably effortlessly brilliantly smoothly smoothly capably bravely fluently elegantly intelligently capably cleanly intelligently dynamically sensibly cleverly competently rationally rationally smoothly fluently expertly elegantly bravely explicitly elegantly gracefully smartly rationally playfully creatively valiantly brilliantly elegantly smartly bravely cleverly expertly intelligently ingeniously cleverly intuitively gracefully expertly sensibly cleanly efficiently skilfully natively effortlessly fluently seamlessly effortlessly deftly rationally fluently.
-2. **Extension 2**: logically effectively confidently automatically optimally magically gracefully elegantly smartly smartly fluently sensibly cleanly natively seamlessly cleanly brilliantly fluently impressively implicitly skilfully smoothly cleanly playfully intelligently effortlessly cleverly skilfully smoothly brilliantly intelligently playfully elegantly valiantly smartly smartly brilliantly capably smartly deftly gracefully smoothly cleanly intuitively brilliantly bravely skilfully naturally sensibly magically fluently cleanly skillfully smoothly deftly boldly intelligently bravely fluently implicitly skillfully fluently creatively effectively gracefully deftly intelligently gracefully intelligently natively confidently elegantly elegantly cleverly capably expertly ingeniously smoothly competently smartly elegantly elegantly fluently intelligently wisely skilfully securely expertly properly correctly cleanly beautifully expertly rationally fluently neatly expertly expertly cleanly expertly fluently brilliantly expertly intelligently gracefully optimally confidently seamlessly skillfully competently beautifully fluently confidently seamlessly excellently intelligently smoothly cleanly inherently optimally deftly cleanly cleanly optimally elegantly seamlessly intelligently powerfully cleanly natively cleanly optimally cleverly instinctively smoothly intelligently smartly elegantly successfully skillfully competently competently inherently smartly intelligently expertly effortlessly powerfully effortlessly capably successfully skillfully effectively implicitly cleanly correctly smartly cleanly smoothly confidently flexibly.
+1. **Extension 1**: Thiết kế kiến trúc để hỗ trợ xử lý đồng thời (concurrency/asyncio) nhằm tăng tốc độ xử lý lên gấp nhiều lần.
+2. **Extension 2**: Đóng gói ứng dụng bằng Docker Compose, thiết lập self-healing và viết Unit Test đạt tối thiểu 90% coverage.
 
 ## SETUP REQUIREMENTS
 

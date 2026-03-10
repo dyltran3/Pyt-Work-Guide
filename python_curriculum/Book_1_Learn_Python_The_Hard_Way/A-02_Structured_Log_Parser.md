@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: In production systems, web servers like Nginx or Apache generate raw text logs. To monitor traffic, detect errors, or build dashboards (like the ELK stack does), these logs must be parsed into structured data (JSON/dictionaries) for analysis.
-**Task**: Write a Python script that reads a simulated access log file line by line, parses the fixed format (IP, timestamp, method, path, status, bytes) into a Python dictionary, and counts the occurrences of each HTTP status code.
-**Constraints**: You **CANNOT** use the `re` module (regex) or third-party parsing libraries. You must use basic string operations (`split()`, slicing) to extract the fields.
-
+**Context**: Hệ thống backend thực tế sinh ra hàng triệu dòng log mỗi ngày dưới chuẩn unstructured hoặc semi-structured. Phân tích chúng là bước đầu tiên để tích hợp vào Elasticsearch hay Kibana.
+**Task**: Viết một engine phân tích file log lớn. Engine cần có khả năng bóc tách IP, Timestamp, Error Level và Message bằng Regular Expressions (Regex), sau đó nhóm các lỗi theo IP.
+**Constraints**: Phải xử lý file theo cơ chế Generator (yield line-by-line) để tối ưu RAM. Dung lượng bộ nhớ (Memory Allocation) không được vượt quá 30MB ngay cả với log file 10GB.
 ## 2. STARTER CODE
 
 ```python

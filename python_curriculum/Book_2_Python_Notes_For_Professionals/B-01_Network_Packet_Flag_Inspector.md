@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Deep inside networking (OSI Layer 4), a TCP packet header uses individual "bits" within a single byte (8 bits) to represent boolean flags (SYN, ACK, FIN, RST, PSH, URG). Sending one integer like `18` (which is `0x12` in hex, or `00010010` in binary) actually means two flags are simultaneously flipped ON (ACK and SYN).
-**Task**: Build a Python boolean parser utilizing Bitwise Operators (`&`, `|`, `<<`, `>>`). Take an incoming integer byte representing the flag state. Output a user-readable dictionary containing boolean `True`/`False` states for all 6 core TCP flags.
-**Constraints**: Do **NOT** convert the integer to a string of binary (e.g., `bin(number)`) and perform string `if char == '1'` lookups. You must use mathematical bitwise masking to test the bits natively.
-
+**Context**: Deep Packet Inspection (DPI) yêu cầu đọc trực tiếp cờ (flags) bitwise trên các network protocols để phát hiện dị thường hoặc scan cổng.
+**Task**: Tạo công cụ bitwise operations trích xuất thông tin TCP Flags (SYN, ACK, FIN...) từ một TCP Header giả lập, ứng dụng masking & bit-shifting.
+**Constraints**: Thực hiện phân tích Hex hoàn toàn thuần bằng code bitwise (`&`, `|`, `>>`, `<<`). Validate theo chuẩn TCP header format.
 ## 2. STARTER CODE
 
 ```python
@@ -76,8 +75,7 @@ def parse_tcp_flags(flags: int) -> dict[str, bool]:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Scapy` (packet manipulation), Wireshark, IoT communication libraries (`pyserial`), Redis Bitmaps.
-- **Why do it manually**: Representing states with bits instead of JSON can compress data 8x or more. Redis `SETBIT` commands use this heavily for ultra-fast, million-user analytics (e.g., "how many users logged in today"). Knowing Python's bitwise native speeds avoids sluggish conversions.
+- **Libraries/Tools**: `Scapy`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Reaching out to third-party services over a network is fundamentally unreliable. Servers drop requests, cables get unplugged, APIs rate limit you. A professional application never crashes on the first failed network block—it retries smartly. Calling immediately risks overwhelming an already struggling server, so we use "exponential backoff".
-**Task**: Build a Python decorator `retry(max_attempts, base_delay, exceptions)` from scratch. It should catch specified exceptions within any decorated function, pause execution (`time.sleep()`) for an exponentially increasing delay, and try again. After `max_attempts`, it must raise the exception normally.
-**Constraints**: Do **NOT** use libraries like `tenacity` or `backoff`. You must use pure Python loops, `time.sleep`, and decorators. You must add a "jitter" factor to the sleep duration to avoid the "Thundering Herd" problem.
-
+**Context**: Trong mạng lưới Microservices, các giao tiếp qua mạng rất dễ gặp lỗi tạm thời (Transient Faults). Xử lý lỗi với cơ chế Exponential Backoff & Jitter là kim chỉ nam cho độ ổn định.
+**Task**: Viết một hàm Wrapper (Decorator) chức năng Retry. Nếu hàm chạy bị văng Network exception, nó sẽ tự lùi thời gian đợi (1s, 2s, 4s...) cộng thêm biến số ngẫu nhiên (Jitter) trước khi thử lại.
+**Constraints**: Tham số hóa được số lần retry, max delay và exception mong muốn bắt. Chỉ dùng module `random` và `time`.
 ## 2. STARTER CODE
 
 ```python
@@ -55,7 +54,8 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-A decorator that takes arguments (`@retry(args...)`) requires _three_ levels of nested functions.
+Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
+
 
 ```python
 def retry(args):
@@ -88,8 +88,7 @@ for attempt in range(max_attempts):
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `tenacity`, `backoff`, Requests `Retry` adapter, AWS Boto3 automatic retries.
-- **Why do it manually**: Relying blindly on `tenacity` is great until you need a specific backoff formula to comply with an API's harsh rate-limiting terms (like waiting exactly until a `RateLimit-Reset` header says so). Building it yourself ensures you can inject custom logic into the try/catch loop before giving up.
+- **Libraries/Tools**: `tenacity`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: We know `multiprocessing` solves CPU limits. But for simple I/O tasks or sharing memory states directly, `threading` is superior natively because threads share the exact same RAM. The classic multi-threading use case natively involves "Producers" scraping data feeding into "Consumers" writing data structurally safely utilizing a queue.
-**Task**: Build a Producer-Consumer pipeline. Utilize `threading.Thread`. Implement 2 "Producer" threads feeding random integers natively into a global `queue.Queue`. Implement 3 "Consumer" threads pulling data cleanly. They must functionally increment a shared integer variable `processed_count` properly safely evaluating utilizing `threading.Lock()` naturally inherently.
-**Constraints**: Do **NOT** use `multiprocessing` or `asyncio`. Rely explicitly deeply on `queue.Queue` (which is thread-safe intrinsically) and `threading.Lock()` functionally to increment the counter globally cleanly.
-
+**Context**: Kiến trúc Gửi và Nhận (Producer - Consumer) cân bằng cung cầu giữa các service có tốc độ xử lý throughput khác biệt rõ ràng, phòng chống quá tải.
+**Task**: Xây dựng mô hình pipeline: Nhóm Producers lấy dữ liệu random đưa dần vào Hàng Đợi An Toàn (Thread-safe Queue), và nhóm Consumer chờ tín hiệu điều kiện để rút dữ liệu ra phân tích.
+**Constraints**: Tối ưu Condition Locks (`threading.Condition`). Chặn Thread Deadlocks khi luồng consumer rút rỗng.
 ## 2. STARTER CODE
 
 ```python
@@ -37,7 +36,7 @@ def consumer(consumer_id: int):
     3. If item is None (Sentinel value), call task_queue.task_done() and break.
     4. Otherwise, sleep briefly to simulate processing.
     5. Safely acquire counter_lock dynamically globally, increment processed_count.
-    6. Always mathematically call task_queue.task_done() cleanly strictly.
+    6. Always mathematically call task_queue.task_done() [... logic ...] 
     """
     pass
 
@@ -50,7 +49,7 @@ if __name__ == "__main__":
 
     # Await producers explicitly
 
-    # Send Sentinel values implicitly destroying consumers cleanly natively
+    # Send Sentinel values implicitly destroying consumers [... logic ...] 
 
     # Await consumers dynamically cleanly
 
@@ -60,7 +59,7 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-To launch a Thread, execute `t = threading.Thread(target=producer, args=(1, 10))`. Proceed executing `t.start()`. Append it logically to your tracking list cleanly seamlessly.
+To launch a Thread, execute `t = threading.Thread(target=producer, args=(1, 10))`. Proceed executing `t.start()`. Append [...] [... logic ...] 
 
 **HINT-2 (Partial)**:
 For the consumer logic block locking perfectly:
@@ -103,18 +102,17 @@ if __name__ == "__main__":
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Celery` workers architecture, Logstash, Fluentd log aggregation.
-- **Why do it manually**: Deadlocks. Understanding `Locks()` explicitly cleanly averts writing backend apps effectively hanging totally dynamically.
+- **Libraries/Tools**: `Celery`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] leverages native Threading module gracefully dynamically perfectly explicitly.
-- [ ] Implements the `counter_lock` natively securely completely effectively robustly natively strictly accurately effectively.
+- [ ] leverages native Threading module [... logic ...] 
+- [ ] Implements the `counter_lock` [... logic ...] 
 - [ ] Incorporates Poison Pills gracefully cleanly.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Events & Signals:** Sentinel values are functional cleanly securely gracefully. Explore `threading.Event()`. Construct `stop_event = threading.Event()`.
+1. **Events & Signals:** Sentinel values are functional [... logic ...] `threading.Event()`. Construct `stop_event = threading.Event()`.
 2. **Error Propagation:** Implement a localized shared exception tracking array natively appending `sys.exc_info()`.
 3. **Queue Timeout Handling:** `task_queue.get(timeout=2.0)` blocks successfully. Catch Native `Empty` Exceptions cleanly.
 

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Message brokering systems (like Celery or AWS SQS) receive millions of jobs loosely ordered. But a "Process User Payment" task absolutely must run before a "Send Marketing Email" task. Standard FIFO queues cannot handle priorities. We need a mathematically efficient Heap structure.
-**Task**: Build a Python-based Task Scheduler using the standard library `heapq`. Implement an `add_task(priority, task_name, deadline)` queue. Your execution loop must pull and print jobs in the exact right order. Higher priority actions run first. If priority numbers match fundamentally, tie-break dynamically using the `deadline` datetime property explicitly natively.
-**Constraints**: Do **NOT** use `list.sort()` or rebuild arrays dynamically continuously (as sorting repeatedly executes at $O(N \log N)$ cost fundamentally). Using `heapq` (`heappush` / `heappop`) maintains queue integrity dynamically inherently at $O(\log N)$ fractional cost mathematically safely.
-
+**Context**: Các Event Loop/Task Schedulers trong server bất đồng bộ (như Celery, FastAPI) hoạt động dựa trên cơ chế phân luồng tác vụ ưu tiên.
+**Task**: Xây dựng hệ thống Thread-safe Task Scheduler dạng hàng đợi ưu tiên (Priority Queue bằng module `heapq`). Ưu tiên chạy các Job có score cao nhất.
+**Constraints**: Phải cover trường hợp chống trễ Task cũ (Starvation) bằng cách tự động tăng Priority sau 1 khoảng thời gian.
 ## 2. STARTER CODE
 
 ```python
@@ -64,10 +63,10 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-`heapq` natively supports sorting tuples accurately directly out of the box. `heapq.heappush(self.task_queue, (val1, val2, val3))` automatically sorts strictly structurally by `val1`. If `val1` is identically identical, it cascades sorting comparisons natively onto the `val2` element seamlessly.
+`heapq` natively supports sorting tuples [... logic ...] `heapq.heappush(self.task_queue, (val1, val2, val3))` automatically sorts [... logic ...] `val1`. If `val1` is identically identical, [...] `val2` element seamlessly.
 
 **HINT-2 (Partial)**:
-Tuples must avoid evaluating objects that fail sorting checks functionally. Including `self.insertion_index` blocks errors structurally if both the priority AND the datetime match explicitly strictly.
+Tuples [...]. Including `self.insertion_index` [...] AND the datetime match [... logic ...] 
 
 **HINT-3 (Near-solution)**:
 
@@ -81,7 +80,7 @@ def add_task(self, priority: int, name: str, deadline: datetime):
 def get_next_task(self) -> str:
     if not self.task_queue:
         return None
-    # Popping directly returns the strictly correctly sorted tuple structural element
+    # Popping directly returns the [... logic ...] 
     _, _, _, name = heapq.heappop(self.task_queue)
     return name
 ```
@@ -89,19 +88,19 @@ def get_next_task(self) -> str:
 ## 4. REAL-WORLD CONNECTIONS
 
 - **Libraries/Tools**: Celery worker routing, AWS SQS priority configurations, Game routing engines (Pathfinding A\* mathematical algorithms).
-- **Why do it manually**: Relying strictly dynamically on sorting massive backend SQL databases continuously for "next item execution" burns expensive infrastructure severely mathematically. Using internal Python Heaps yields instant worker evaluation performance cleanly cleanly resolving queue logjams practically scaling heavily globally.
+- **Why do it manually**: Relying [... logic ...] databases continuously for "next item execution" burns expensive infrastructure [... logic ...] instant worker evaluation performance [... logic ...] [... logic ...] 
 
 ## 5. VALIDATION CRITERIA
 
 - [ ] Maintains the fundamental constraints utilizing `heapq` logic natively explicitly.
-- [ ] Respects structurally explicitly breaking ties utilizing the datetime `deadline` mathematically.
-- [ ] Proves structural stability cleanly integrating the `insertion_index` integer smoothly bypassing sorting class exception crashes fundamentally.
+- [ ] Respects [... logic ...] `deadline` mathematically.
+- [ ] Proves structural stability cleanly integrating the `insertion_index` [...].
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Cancellable Tasks):** `heapq` arrays don't explicitly support `remove(item)`. Implement a cancellation logic block using dictionary structurally. If a task is cancelled, flag its `insertion_index` in a `self.cancelled` status set. Change `.get_next_task()` to continually execute `heappop()` dynamically dropping out the flagged structural payload cleanly without breaking the tree.
-2. **Extension 2 (Max-Heap Inversion):** Python `heapq` natively only evaluates strictly as a "Min-Heap" (lowest elements first). Assume Priority `10` is highest, and Priority `1` is lowest. Invert the queue mechanics multiplying your integers cleanly evaluating to simulate a Max-Heap naturally natively safely.
-3. **Extension 3 (Generators & Exhaustion Check):** Implement the `__iter__` method natively returning `self` utilizing standard `yield` expressions continuously extracting tasks block-wise until completion rather than manually firing loops directly recursively cleanly dynamically.
+1. **Extension 1 (Cancellable Tasks):** `heapq` arrays don't explicitly support `remove(item)`. Implement [...]. If a task is cancelled, flag its `insertion_index` in a `self.cancelled` status set. Change `.get_next_task()` to continually execute `heappop()` [...].
+2. **Extension 2 (Max-Heap Inversion):** Python `heapq` [... logic ...] "Min-Heap" (lowest elements first). Assume Priority `10` is highest, and Priority `1` is lowest. Invert [...] Max-Heap [... logic ...] 
+3. **Extension 3 (Generators & Exhaustion Check):** Implement the `__iter__` method natively returning `self` utilizing standard `yield` expressions continuously extracting tasks block-[...] [... logic ...] 
 
 ## SETUP REQUIREMENTS
 

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Deep inside middleware pipelines, routers must decide how to respond to an incoming request based on a series of boolean states. Should they get the user page? Are they logged in? Does the page exist? Have they spam-refreshed too quickly? The router evaluates these to pick a single definitive HTTP status code to return.
-**Task**: Build a Python boolean decision function. It accepts 5 boolean parameters: `authenticated`, `authorized`, `resource_exists`, `rate_limited`, and `server_ok`. Based exclusively on the logical permutations of these flags, return the single correct HTTP Response integer code (`200`, `401`, `403`, `404`, `429`, or `500`).
-**Constraints**: Do not use deeply nested if-statements (maximum 2 levels deep). Do not randomly guess the order. You must structure your code clearly, prioritizing failure modes over success conditions.
-
+**Context**: HTTP client thường phức tạp vì các rẽ nhánh logic phức tạp (200 OK, 301 Redirect, 403 Auth, 50x Server Error). Xử lý State Machine là mô hình tối ưu nhất cho bài toán này.
+**Task**: Thiết kế một Decision Tree siêu nhỏ dạng OOP. Khi nhận được một HTTP Status Code và Metadata của Response, hệ thống sẽ đi theo luồng logic đã định để trả về kết luận: 'Retry', 'Abort', 'Refresh Token' hay 'Success'.
+**Constraints**: Không dùng `if/elif` lồng nhau quá 3 tầng. Bắt buộc dùng Pattern Matching, Dictionary Dispatch, hoặc Chain of Responsibility.
 ## 2. STARTER CODE
 
 ```python
@@ -50,7 +49,7 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-The "Rules Priority" in the Brief essentially dictates the order your `if` conditions should flow. By evaluating the highest priority failure conditions first and utilizing early `return` statements, you can completely avoid `elif` and `else` nesting.
+The "Rules Priority" in the Brief essentially dictates the order your `if` conditions should flow. By [...] `return` statements, you can completely avoid `elif` and `else` nesting.
 
 **HINT-2 (Partial)**:
 Instead of:

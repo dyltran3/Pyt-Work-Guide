@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Unit-testing is ubiquitous (`pytest`, `unittest`). Running assertions verifies logical safety. Building tests heavily involves "Discovery Rules" (the framework auto-locates your tests) and structured feedback (PASSED vs FAILED outputs with stack traces).
-**Task**: Write a miniature testing framework from absolute scratch. Build a base `TestCase` class with helper assertion methods (`assert_equals`, `assert_raises`). Build a `TestRunner` class that accepts a `TestCase` class, uses Python's `inspect` module to dynamically discover all methods starting with the prefix `test_`, executes them, handles exceptions gracefully, and prints a final PASSED/FAILED terminal status report cleanly.
-**Constraints**: Absolutely no use of Python's built-in `unittest` module or `pytest` package. You must handle exceptions manually utilizing pure Python introspection.
-
+**Context**: Trong kiến trúc multi-service (Microservices), Front-End hoặc Service A phải đảm bảo Service B không phá vỡ Payload mong muốn. Contract Testing đảm bảo giao thức đó vững chắc.
+**Task**: Xây dựng micro-framework phân tích và so sánh API payload hiện tại với Contract Schema (cấu trúc cam kết), báo cáo fail (diff) chính xác những Key/Type bị vi phạm.
+**Constraints**: Phần report diff phải hiển thị dưới dạng đường dẫn Key tường minh thay vì chỉ báo lỗi Fail chung chung.
 ## 2. STARTER CODE
 
 ```python
@@ -107,12 +106,11 @@ class TestRunner:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `pytest`, `unittest`, `nose`.
-- **Why do it manually**: `pytest` heavily utilizes "metaprogramming"—code that searches for, analyzes, and executes other code dynamically. The `inspect` module is incredibly powerful for writing Django administration panels, automatic FastAPI Swagger documentation generation, or any system mapping arbitrary classes at runtime.
+- **Libraries/Tools**: `pytest`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Successfully identifies tests entirely dynamically without a human hard-coding `.add_test()` lines.
+- [ ] Successfully identifies tests [... logic ...] -coding `.add_test()` lines.
 - [ ] Exception failures do not crash the `TestRunner` itself; they are isolated per-test.
 - [ ] Correctly asserts exceptions being thrown.
 

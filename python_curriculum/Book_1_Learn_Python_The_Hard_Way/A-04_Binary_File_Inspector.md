@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Cybersecurity forensics, malware analysis, or even generic software debuggers frequently need to read raw files to determine what a file _actually_ is, as opposed to relying on the extension (which can be easily faked). They do this by recognizing "magic bytes"—file signatures hidden in the first few bytes.
-**Task**: Build a Python script that reads an arbitrary file in binary mode. It should extract the "Magic Bytes" (the first 4-8 bytes representing the file signature), calculate the total file size in bytes, and output a "hex dump" of the first 64 bytes formatted identically to command-line tools like `xxd` or `hexdump`.
-**Constraints**: You **CANNOT** use `subprocess` to call `xxd` or `hexdump`. You must read Python `bytes` objects and format the hex dump grid directly using Python string manipulation.
-
+**Context**: Lập trình viên thỉnh thoảng phải xử lý hệ thống Legacy hoặc forensic data bằng binary. Hiểu cấu trúc bit/byte và Hex signature (Magic bytes) là kỹ năng phân biệt mid-level và senior engineer.
+**Task**: Viết một script đọc vào một tập tin dạng Binary, bóc tách header của tập tin để tự động nhận dạng định dạng file (PNG, PDF, ZIP...), sau đó trích xuất kích thước và metadata thô.
+**Constraints**: Sử dụng module `struct` để unpack bytes. Tuyệt đối không đọc toàn bộ file vào RAM cùng lúc, chỉ chunking theo buffer.
 ## 2. STARTER CODE
 
 ```python
@@ -60,8 +59,7 @@ print(f"{offset:08x}  {hex_part:<49}  |{ascii_repr}|")
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `xxd`, `hexdump`, Wireshark, Radare2.
-- **Why do it manually**: Manipulating raw memory/bytes is heavily abstracted in Python. For Cybersecurity tooling or custom binary protocol parsing (like IoT devices over Bluetooth), you constantly bounce between integers, hex representations, and ASCII. Mastering exactly what `byte` vs `str` means in Python prevents massive encryption/decryption headaches later.
+- **Libraries/Tools**: `xxd`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 

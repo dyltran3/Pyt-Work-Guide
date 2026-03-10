@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Modern backend frameworks process incoming JSON from web traffic. Before that data touches the database, it MUST be safely validated. If an endpoint expects an `age` parameter as an integer between 0 and 150, but someone passes `"twenty"` or `9999`, the system should reject it securely.
-**Task**: Build a Python validation engine that takes an incoming data dictionary and validates it against a target schema dictionary. The validator must check for required fields, perform type-checking against schema definitions, and enforce min/max bounds on integers. It should accumulate a list of specific error string messages for all violations, rather than crashing on the first failure.
-**Constraints**: You **CANNOT** use `Pydantic`, `Marshmallow`, or `JSONSchema`. You must build the core validation logic traversing dictionaries organically using pure Python `if/elif/else` blocks and `type()` checks.
-
+**Context**: Tại các hệ thống Gateway, mọi payload nhận từ người dùng đều là 'untrusted'. Việc validate cấu trúc JSON payload sâu trước khi cho đi tiếp là bước cực kỳ trọng yếu chống lại Injection & crash hệ thống.
+**Task**: Viết một bộ Decorator/Hàm kiểm duyệt JSON payload dựa trên một schema tuỳ chỉnh do bạn thiết kế. Cần báo đúng đường dẫn key bị thiếu hoặc sai type (vd: 'user.address.street must be string').
+**Constraints**: Không sử dụng `pydantic` hay `jsonschema`. Cần bắt recursive depth validation để quét payload lồng nhau đa tầng.
 ## 2. STARTER CODE
 
 ```python
@@ -73,8 +72,7 @@ if 'max' in rules and actual_value > rules['max']:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Pydantic` (FastAPI's core engine), `django-rest-framework` serializers, `marshmallow`.
-- **Why do it manually**: Production validators are complex black boxes. When you build one from scratch, you directly handle dictionary composition and introspection. Understanding how metadata (the schema) can dynamically evaluate actual data sets the stage for building middleware, dynamic database mappers, and meta-programming.
+- **Libraries/Tools**: `Pydantic`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 

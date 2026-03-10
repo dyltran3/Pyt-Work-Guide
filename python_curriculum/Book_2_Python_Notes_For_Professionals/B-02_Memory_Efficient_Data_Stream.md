@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Streaming live metrics (like server sensor readings or high-frequency stock trading data) can quickly consume memory. If a pipeline tries to hold the entire history of an infinite stream just to calculate an average, it will run out of RAM. "Online algorithms" solve this by calculating statistics dynamically on the fly without storing historical data.
-**Task**: Build a Python memory-efficient data stream using a Generator. Read from a mock data source continuously. Calculate the "Running Mean" (Average) and "Running Variance / Standard Deviation" of the stream using Welford's Online Algorithm without ever storing the `bytes` in a list.
-**Constraints**: Do **NOT** use `statistics.mean`, `numpy`, or keep a historical `list` or `list` slices of the streamed values. Process the float values purely recursively inside the infinite loop.
-
+**Context**: Micro-optimizations luôn cần khi lượng Data Ingestion quá lớn (Kafka, Kinesis streams). Việc nén lưu trữ RAM bằng built-in objects là cốt lõi của tối ưu Python Backend.
+**Task**: Thiết kế một cấu trúc Memory-Efficient Data Stream sử dụng `__slots__` và NamedTuple/Dataclass để lưu lượng log records thay vì dùng dictionary thông thường.
+**Constraints**: So sánh Memory Profile bằng module `sys.getsizeof` để chứng thực bộ nhớ cấu trúc mới nhỏ hơn cấu trúc sử dụng Dictionary ít nhất 30%.
 ## 2. STARTER CODE
 
 ```python
@@ -87,8 +86,7 @@ def process_stream_continuously(stream):
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Apache Kafka` streams, `Spark Streaming`, Kinesis.
-- **Why do it manually**: A running container (AWS Fargate, Docker) has strict RAM availability (sometimes 256MB). Reading a million-row DB cursor entirely into RAM (`list(cursor)`) guarantees instance failure. Applying Generator architectures paired with stream mathematics scales infinitely on fixed infrastructure.
+- **Libraries/Tools**: `Apache Kafka`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
@@ -100,7 +98,7 @@ def process_stream_continuously(stream):
 
 1. **Extension 1 (Exponential Moving Average):** Financial data usually tracks Exponential Moving Average (EMA) rather than simple total means so the data reacts to _recent_ changes faster. Implement a secondary mathematical pipeline calculating an EMA with an `alpha` factor of `0.1`.
 2. **Extension 2 (Corrupted Iterables):** Introduce `None` and String objects into the mock data stream (representing network stutter or bad JSON parsing). Implement `try/except` guard rails inside `process_stream_continuously` that gracefully skips broken metrics without permanently destroying the Welford calculations or crashing the stream.
-3. **Extension 3 (Decoupled Windows):** Rather than total running numbers, implement a sliding window tracker. Calculate the mean of _only_ the last `100` elements mathematically. Use `collections.deque(maxlen=100)` to accomplish the sliding element drop-off perfectly efficiently.
+3. **Extension 3 (Decoupled Windows):** Rather than total running numbers, implement a sliding window tracker. Calculate the mean of _only_ the last `100` elements mathematically. Use `collections.deque(maxlen=100)` [...]-off [... logic ...] 
 
 ## SETUP REQUIREMENTS
 

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Reaching out to external websites is "I/O Bound"—your CPU spends 99% of its time literally doing nothing, just waiting for the network packets to arrive. Scanning 50 websites using a standard `for` loop natively executes sequentially (URL 1 starts, waits, finishes. URL 2 starts...). Asynchronous Python (`asyncio`) allows launching all 50 TCP requests concurrently seamlessly on a single CPU thread.
-**Task**: Build an Async HTTP Crawler. Take a list of 50 test URLs. Implement an `async def fetch()` function gathering the HTTP Status Code for a single URL. Execute all `fetch` commands concurrently utilizing `asyncio.gather`. Limit the concurrency to exactly 10 simultaneous connections using `asyncio.Semaphore` natively avoiding flooding the OS sockets.
-**Constraints**: Do **NOT** use `requests` natively (it is strictly blocking globally). You must use `aiohttp` or `httpx` asynchronously.
-
+**Context**: Scraping/Crawling hàng ngàn URL đồng bộ bị nghẽn mạng do mô hình chặn (blocking I/O). Async I/O là tiêu chuẩn tối cao để bẻ khoá nút cổ chai này.
+**Task**: Implement một thuật toán Crawler không đồng bộ (Coroutines + `asyncio`) thu thập metadata từ danh sách API mock URL, hỗ trợ concurrent rate limiting thông qua semaphores.
+**Constraints**: Sử dụng thuần `asyncio` base APIs và `aiohttp` / tương đương. Khống chế limit concurrent không vượt quá 10 worker cùng lúc.
 ## 2. STARTER CODE
 
 ```python
@@ -57,7 +56,7 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-`asyncio.Semaphore` operates mathematically identically to a lock. Wrap your network request utilizing an `async with semaphore:` context manager natively holding the execution token continuously.
+`asyncio.Semaphore` operates [... logic ...] network request utilizing an `async with semaphore:` [...].
 
 **HINT-2 (Partial)**:
 For the `fetch` function:
@@ -93,20 +92,19 @@ async def main_crawler(urls: list[str], max_concurrent=10):
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `aiohttp`, `httpx`, `FastAPI`, `Scrapy`.
-- **Why do it manually**: Relying strictly on basic python `requests` chokes massive scale operations natively. Building async semaphores demonstrates understanding exactly how event-loops shuffle tasks gracefully during "dead time" (network waits) functionally scaling web scraping 100x faster globally.
+- **Libraries/Tools**: `aiohttp`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Correctly utilizes `async/await` syntax structurally natively.
-- [ ] Safe execution gracefully avoids crushing connection limits cleanly explicitly via `#Semaphore`.
-- [ ] Bypasses synchronous time limits cleanly executing 50 massive requests structurally reliably in fractional time thresholds cleanly cleanly.
+- [ ] Correctly utilizes `async/await` syntax [... logic ...] 
+- [ ] Safe [...] [... logic ...] `#Semaphore`.
+- [ ] Bypasses synchronous time limits cleanly executing 50 massive requests [... logic ...] cleanly.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Timeout Fallback):** Even with async, a dead server can hang a connection endlessly globally. Integrate `asyncio.wait_for(task, timeout=2.0)` inside the `fetch` wrapper block. If it times out inherently natively, catch `asyncio.TimeoutError` exclusively safely returning `(url, -1)`.
-2. **Extension 2 (Real Time Reporting):** `asyncio.gather` returns nothing until ALL operations conclude successfully. Switch to utilizing `asyncio.as_completed(tasks)`. Loop across it functionally printing status codes _the exact millisecond_ they return globally progressively.
-3. **Extension 3 (Async Queue Workers):** Instead of a strict list iteration, build an `asyncio.Queue`. Fill it with 1000 URLs continually dynamically. Launch exactly 10 "Worker Tasks" holding loops indefinitely popping URLs structurally cleanly simulating an active scraping engine.
+1. **Extension 1 (Timeout Fallback):** Even with async, [...] [... logic ...] `asyncio.wait_for(task, timeout=2.0)` inside the `fetch` wrapper block. If it times out [... logic ...] `asyncio.TimeoutError` [... logic ...] `(url, -1)`.
+2. **Extension 2 (Real Time Reporting):** `asyncio.gather` returns nothing until ALL operations conclude successfully. Switch to utilizing `asyncio.as_completed(tasks)`. Loop [...] _the exact millisecond_ they return [... logic ...] 
+3. **Extension 3 (Async Queue Workers):** Instead of a strict list iteration, build an `asyncio.Queue`. Fill it with 1000 URLs [... logic ...] 10 "Worker Tasks" holding loops indefinitely popping URLs [... logic ...] 
 
 ## SETUP REQUIREMENTS
 

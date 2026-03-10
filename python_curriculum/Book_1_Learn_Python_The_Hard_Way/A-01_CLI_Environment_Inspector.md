@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Modern backend applications (like FastAPI services or Docker containers) rely heavily on environment variables for configuration (the "12-Factor App" methodology). However, debugging which variables are actually loaded in a given shell or container can be messy.
-**Task**: Write a Python CLI script that reads system environment variables (specifically focusing on `PATH`, `HOME`, `VIRTUAL_ENV`, or any key containing `PATH`) and formats them into a clean, readable ASCII table in the terminal.
-**Constraints**: You **CANNOT** use any external formatting libraries (like `rich` or `prettytable`). You must use only the built-in `os` module and Python's native string formatting (e-strings) to manually construct and align the table.
-
+**Context**: Môi trường dòng lệnh (CLI) là giao diện đầu vào quan trọng cho các công cụ CI/CD, script tự động hóa. Việc tự động hóa lấy và kiểm thử thông tin hệ thống giúp đảm bảo tính nhất quán giữa các môi trường (Dev, Staging, Prod).
+**Task**: Xây dựng công cụ CLI (Command-Line Interface) từ đầu để thu thập Metadata của hệ điều hành, biến môi trường (Environment Variables) và kiểm tra phân quyền thư mục, sau đó xuất kết quả dưới dạng JSON.
+**Constraints**: Tuyệt đối không sử dụng thư viện bên thứ ba như `click` hay `typer`. Giới hạn chỉ dùng các module tích hợp sẵn (`os`, `sys`, `json`). Must handle graceful fallback nếu không có quyền truy cập root/admin.
 ## 2. STARTER CODE
 
 ```python

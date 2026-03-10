@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Monolithic applications eventually become too massive to modify directly. Frameworks (like Flask) allow developers to inject custom logic globally using patterns like "Middleware" or "Plugins". When text flies through the app, these plugins intercept, process, and return the data seamlessly.
-**Task**: Build an Object-Oriented pipeline system utilizing composition. Build a `Pipeline` class. Build a base generic `TextPlugin` class. Then build 3 concrete Plugin classes inheriting from `TextPlugin` (`StripSpacesPlugin`, `CensorWordPlugin`, `LowercasePlugin`). Register instances of these plugins into the pipeline and route raw text through all of them sequentially.
-**Constraints**: The `Pipeline` class MUST NOT know what the plugins are explicitly. It simply keeps a list of registered classes, calling their uniform `.process(text)` method. This enforces separation of concerns.
-
+**Context**: Framework Python thường được thiết kế để dễ dàng mở rộng từ cộng đồng (qua các Addon, Plugin) mà không cần can thiệp source code trực tiếp.
+**Task**: Xây dựng Plugin Manager nhỏ gọn, tự động quét thư mục `plugins/`, load động (dynamically load) tất cả các module có implement một abstract base class nhất định và lưu vào registry.
+**Constraints**: Sử dụng module `importlib`. Kiểm soát lỗi (sandbox cơ bản) trong quá trình import.
 ## 2. STARTER CODE
 
 ```python
@@ -93,7 +92,7 @@ class Pipeline:
 ## 4. REAL-WORLD CONNECTIONS
 
 - **Libraries/Tools**: Transformers (`HuggingFace pipelines`), Pytest hooks, requests `Sessions`, Webpack loaders.
-- **Why do it manually**: Relying strictly on "Composition over Inheritance" makes applications infinitely scalable. If you hardcoded 5 `if` statements inside the main program modifying text, updating rules breaks the main loop. Plugins decouple rules into isolate, testable classes securely.
+- **Why do it manually**: Relying strictly on "Composition over Inheritance" makes applications infinitely scalable. If you hardcoded 5 `if` [...], [...]. Plugins decouple rules into isolate, testable classes securely.
 
 ## 5. VALIDATION CRITERIA
 
@@ -104,7 +103,7 @@ class Pipeline:
 ## 6. EXTENSION CHALLENGES
 
 1. **Extension 1 (Dynamic Loading):** Modify your system to load plugin objects dynamically from a mock `.json` configuration file, avoiding hard-wiring `pipeline.register(X)` manually in the start script.
-2. **Extension 2 (Error Handling Constraints):** What if `CensorPlugin` crashes internally during `.run()`? Update the Pipeline loop with `try/except Exception` logic. If a plugin crashes, it should print a warning log detailing _which_ plugin class crashed (using `plugin.__class__.__name__`), and simply return the unmodified text out of that loop step, safely feeding it to the next plugin undisturbed.
+2. **Extension 2 (Error Handling Constraints):** What if `CensorPlugin` crashes internally during `.run()`? Update the Pipeline loop with `try/except Exception` logic. If a plugin crashes, [...] _which_ plugin class crashed (using `plugin.__class__.__name__`), [...], [...].
 3. **Extension 3 (Timing Analytics):** Add Python `time.monotonic()` hooks inside the pipeline loop, calculating how many milliseconds each individual plugin requires. Have `Pipeline` print an analytics table ranking plugins by operational latency after completion.
 
 ## SETUP REQUIREMENTS

@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Applications rely on dependency managers (`pip`, `npm`, Dockerfiles) to install packages. Many packages depend on other packages. A resolver must determine the correct order to install packages so that no package is installed before its prerequisites exist. This is a classic Computer Science graph traversal problem: "Topological Sorting".
-**Task**: Build a resolver in Python. Accept a dictionary where the keys are package names, and the values are lists of packages they depend on. Resolve this graph into a flat 1D list showing the correct installation order. You must also successfully detect "Circular Dependencies" (e.g., A needs B, B needs A) and raise an explicit `ValueError`.
-**Constraints**: Do **NOT** import the `graphlib` module or any third-party graph network libraries. Rely purely on Python lists, sets, and basic algorithms using recursion or iterative stacks.
-
+**Context**: Các pipeline khởi tạo ứng dụng thường gồm hàng loạt service phụ thuộc lẫn nhau (DB phải chạy trước Cache, Cache trước Web). Xử lý cấu trúc đồ thị mạng (DAG) là nền tảng của các DevOps Tool.
+**Task**: Viết bộ phân tích sự phụ thuộc sử dụng thuật toán Sắp xếp Topo (Topological Sort). Phát hiện chu trình (Circular Dependency) để văng lỗi nếu cấu trúc bị vòng.
+**Constraints**: Mã hóa bằng DFS hoặc Kahn's Algorithm. Yêu cầu in ra thứ tự khởi động (Boot order) đúng chuẩn trên Terminal.
 ## 2. STARTER CODE
 
 ```python
@@ -93,8 +92,7 @@ def dfs(node):
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `pip`, `npm`, Dockerfile layer caching, Makefiles executing commands.
-- **Why do it manually**: Resolving dependency graphs isn't just for installing libraries. Build-automation tools (like Webpack parsing JS imports), task schedulers (Apache Airflow running DAGs), and Terraform deploying cloud infrastructure universally utilize this algorithm to safely process steps that rely on past steps.
+- **Libraries/Tools**: `pip`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
@@ -105,8 +103,8 @@ def dfs(node):
 ## 6. EXTENSION CHALLENGES
 
 1. **Extension 1 (Missing Packages):** Account for dictionary definitions leaning heavily on external packages: If `D` relies on `E`, but `E` does not exist as a key at the master level of the graph, your system must raise a `KeyError("Missing package resolution for E")`.
-2. **Extension 2 (Tarjan's strongly connected components):** Standard DFS throws a simple error on hitting a loop. Write an implementation that accurately outputs exactly _which_ loop of packages is broken (e.g., `"Loop found resolving: A -> B -> C -> A"`).
-3. **Extension 3 (Parallel Execution Generation):** If `A` needs nothing, and `Z` needs nothing, they could technically be installed simultaneously in production threading. Modify the output to return a list of lists: `[['A', 'Z'], ['B'], ['C', 'D']]` grouping packages that can be installed concurrently at each DAG stage.
+2. **Extension 2 (Tarjan's strongly connected components):** Standard DFS [...]. Write [...] _which_ loop of packages is broken (e.g., `"Loop found resolving: A -> B -> C -> A"`).
+3. **Extension 3 (Parallel Execution Generation):** If `A` needs nothing, and `Z` needs nothing, [...]. Modify [...]: `[['A', 'Z'], ['B'], ['C', 'D']]` [...] DAG stage.
 
 ## SETUP REQUIREMENTS
 

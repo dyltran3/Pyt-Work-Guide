@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: A standard SQL database `LIKE '%query%'` search becomes unbearably slow when scanning millions of text documents. Search engines (like Google, Wikipedia, or Elasticsearch) solve this fundamentally using an "Inverted Index"—mapping every unique word in a corpus to the exact documents (and positions) where it appears, making lookups nearly instant.
-**Task**: Build a basic Inverted Index system. Accept a dictionary where keys are document IDs and values are pure text strings. Tokenize the text (split by space, lowercase). Build an index using python `collections.defaultdict(list)`. Create a `search(query)` method that accepts a single word, looks it up in $O(1)$ time, and ranks the matching document IDs by their "Term Frequency" (TF—how many times the word appeared in that document).
-**Constraints**: Do **NOT** use `nltk`, `elasticsearch`, or other NLP packages. Rely strictly on `collections.defaultdict` and `collections.Counter` to natively parse the strings blocks into dictionaries cleanly.
-
+**Context**: Inverted Index (Chỉ mục ngược) là lõi cốt lõi của ElasticSearch, giúp việc Search Fulltext Data diễn ra chỉ trong vài nano giây thay vì quét toàn cơ sở dữ liệu.
+**Task**: Phân tách một mảng hàng loạt tài liệu text, thực hiện tokenization thô, và thiết kế bảng Inverted Index ánh xạ mỗi từ khóa đến ID các tài liệu.
+**Constraints**: Tối ưu hóa dictionary để hỗ trợ truy vấn các toán tử xếp nối kiểu biến thể đơn giản (AND / OR query).
 ## 2. STARTER CODE
 
 ```python
@@ -90,21 +89,20 @@ def search(self, query: str) -> list[int]:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Elasticsearch`, `Apache Lucene`, `Whoosh`, `Meilisearch`.
-- **Why do it manually**: Production search engines utilize exactly this logic under the hood. Understanding how tokens physically map to integer IDs demystifies "Relevance Scoring". It explains why searching for "Python" heavily ranks a document where "Python" appears 50 times versus a document where it appears once.
+- **Libraries/Tools**: `Elasticsearch`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
 - [ ] `add_document` safely tokenizes ignoring cases cleanly (Apple == apple).
-- [ ] The `self.index` efficiently stores occurrences mapped per document naturally avoiding large array arrays dynamically.
+- [ ] The `self.index` [...].
 - [ ] Queries missing entirely return empty brackets `[]` without throwing `KeyError`.
-- [ ] Document order strictly matches term frequency (TF) highest-to-lowest natively globally.
+- [ ] Document order strictly matches term frequency (TF) highest-to-lowest [... logic ...] 
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Punctuation Stripping):** Currently, `"dog"` and `"dog."` evaluate differently due to punctuation sticking to the string natively. Use the `string.punctuation` module to strip natively breaking characters universally during tokenization strictly parsing pure characters continuously.
-2. **Extension 2 (Multi-Word AND Query):** Allow the `search` function natively to accept multi-word phrases (e.g., `"brown fox"`). Evaluate both tokens natively. Return ONLY documents that contain BOTH words (set intersection of their `doc_ids`), then rank the sum of their combined frequencies gracefully.
-3. **Extension 3 (Stop-words):** Words like "the", "a", "is" are noise functionally. Create an initialization list of "stop words", and natively ignore them during index counting saving massive memory chunks parsing aggressively dynamically.
+1. **Extension 1 (Punctuation Stripping):** Currently, `"dog"` and `"dog."` [...]. Use the `string.punctuation` [...].
+2. **Extension 2 (Multi-Word AND Query):** Allow the `search` function natively to accept multi-word phrases (e.g., `"brown fox"`). Evaluate both tokens natively. Return ONLY documents that contain BOTH words (set intersection of their `doc_ids`), [...].
+3. **Extension 3 (Stop-words):** Words like "the", "a", "is" are noise functionally. Create an initialization list of "stop words", [...] [... logic ...] 
 
 ## SETUP REQUIREMENTS
 

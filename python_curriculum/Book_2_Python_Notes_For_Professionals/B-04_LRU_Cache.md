@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Caching is the ultimate optimization. Python provides `@functools.lru_cache`, enforcing a "Least Recently Used" eviction algorithm: if the cache size limit is hit, the oldest, least-accessed object is thrown out. How is this actually stored efficiently?
-**Task**: Build a manual LRU cache class using an `OrderedDict`. Implement `get(key)` and `set(key, value)`. If the capacity limit is exceeded during a `set`, automatically evict the least recently utilized entry. Using `get` should refresh the usage order of the accessed item.
-**Constraints**: Do **NOT** use `functools`. You must leverage `collections.OrderedDict` efficiently, preventing slow $O(N)$ index-shifting. Both `get` and `set` must execute mathematically close to $O(1)$ constant time operations.
-
+**Context**: Bộ đệm cấu trúc (LRU Cache) tối ưu hoá thời gian tải ứng dụng với quy luật thải các tài nguyên không dùng gần nhất (Eviction).
+**Task**: Tự cài đặt thuật toán cơ sở nội bộ của decorator `@lru_cache`, thiết kế dưới dạng Doubly-linked list kết hợp Hash map phân tán.
+**Constraints**: Độ phức tạp các thao tác Get() và Put() phải là O(1) tuyệt đối.
 ## 2. STARTER CODE
 
 ```python
@@ -81,7 +80,7 @@ def set(self, key: str, value: any) -> None:
 ## 4. REAL-WORLD CONNECTIONS
 
 - **Libraries/Tools**: Redis `maxmemory-policy allkeys-lru`, Memcached, HTTP Browser Cache Control behaviors.
-- **Why do it manually**: A `@functools.lru_cache` wraps functions cleanly, but is functionally isolated inside the executing scope. By building an explicit object cache layer with custom dictionaries, developers construct network-bound layers (like a hybrid in-memory + Redis fallback pattern) cleanly sharing state actively across classes natively.
+- **Why do it manually**: A `@functools.lru_cache` wraps functions cleanly, [...]. By [...], developers construct network-bound layers (like a hybrid in-memory + Redis fallback pattern) [...].
 
 ## 5. VALIDATION CRITERIA
 
@@ -93,7 +92,7 @@ def set(self, key: str, value: any) -> None:
 
 1. **Extension 1 (TTL Timer):** Absolute eviction ignores time. Add a "Time to Live" (TTL). In the `set` method, store a tuple of `(value, time.time())`. In `get()`, verify against the TTL bound. If the entry's timestamp exceeds the threshold, strictly delete it and return `None` despite it functionally remaining within the capacity block constraints.
 2. **Extension 2 (Cache Decorator Injection):** Implement a class-bound wrapper `@memoize_to_LRU(cache_instance_ref)` bridging your manual class back into standard wrapping usage functionality dynamically capturing function execution arguments into localized strings natively.
-3. **Extension 3 (Thread Safety Locks):** Dictionaries aren't fundamentally thread-safe mathematically during destructive iterations. Implement `threading.Lock()` inside your explicit cache methods preventing Race Conditions if 5 threads execute a `set()` simultaneously violating eviction counts critically.
+3. **Extension 3 (Thread Safety Locks):** Dictionaries aren't fundamentally thread-safe mathematically during destructive iterations. Implement `threading.Lock()` [...] Race Conditions if 5 threads execute a `set()` simultaneously violating eviction counts critically.
 
 ## SETUP REQUIREMENTS
 

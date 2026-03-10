@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Creating a new Python project by hand leads to messy inconsistences across teams. Professionals use scaffolding tools to generate standard folder trees (`src/`, `tests/`, `docs/`) and boilerplate files (`requirements.txt`, `.gitignore`, `README.md`) automatically from a command line immediately mimicking best practices.
-**Task**: Build a Python CLI script that accepts arguments (like project name) and utilizes `os` and `pathlib` to generate a robust folder structure on the disk programmatically. It should write default generic template text into a `setup.py` (or `pyproject.toml`) and `.gitignore` file.
-**Constraints**: Do **NOT** use `cookiecutter` or `copier`. Rely on built-in OS libraries to create directories. Enforce `exist_ok=True` checks so rerunning the script doesn't accidentally wipe existing files.
-
+**Context**: Việc setup hàng loạt thư mục dự án mới theo chuẩn (Scaffolding), lặp lại, hay kéo theo sai lệch. Công cụ CLI khởi tạo project theo chuẩn boilerplate sẽ loại bỏ vấn đề đó.
+**Task**: Viết script tự động nạp json config, từ đó tạo cây thư mục, ghi các tệp `.gitignore`, `requirements.txt` và `README` mặc định vô dự án đích.
+**Constraints**: Hỗ trợ flag Dry-run (--dry-run) để in danh sách hành động mà không tạo file thực tế. Chú trọng validation check quyền ghi (write permission).
 ## 2. STARTER CODE
 
 ```python
@@ -82,8 +81,7 @@ __pycache__/
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `cookiecutter`, `Poetry` init commands, `pytest-cov` layouts.
-- **Why do it manually**: Interacting strictly with Operating System I/O file protections (like resolving absolute paths vs relative ones, and handling access rights) is a standard backend hurdle. The `pathlib` framework resolves a decade of awkward string manipulations in `os.path` cleanly.
+- **Libraries/Tools**: `cookiecutter`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
@@ -94,7 +92,7 @@ __pycache__/
 ## 6. EXTENSION CHALLENGES
 
 1. **Extension 1 (Github Actions):** Add a subdirectory `.github/workflows/` and write a basic YAML template inside it `test.yml` that configures a Python CI matrix to run on GitHub out of the box.
-2. **Extension 2 (Automated Initial Installation):** After writing the files, use the `subprocess` module to programmatically execute `python -m venv .venv` inside the new folder, automatically bootstrapping the virtual environment exactly as the developer launches it.
+2. **Extension 2 (Automated Initial Installation):** After writing the files, use the `subprocess` module to programmatically execute `python -m venv .venv` inside the new folder, [...].
 3. **Extension 3 (Sub-process Git Init):** Immediately trigger `subprocess.run(['git', 'init'])` in the target directory to establish source control tracking inherently upon bootstrap.
 
 ## SETUP REQUIREMENTS

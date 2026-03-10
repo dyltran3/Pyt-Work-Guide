@@ -2,10 +2,9 @@
 
 ## 1. EXERCISE BRIEF
 
-**Context**: Every application needs configuration (databases, APIs, internal settings). These are often written in formats like `.ini`, `.env`, or `.yaml`. Teams frequently build CLI tools to bootstrap these configuration files for new environments or developers.
-**Task**: Write a Python script that prompts the user for 5 inputs (host, port, db_name, username, password). Using these inputs, dynamically generate three different configuration files: a `.env` file, a `.ini` file, and a `.yml` file. Validate that critical fields (like host and db_name) are not left entirely empty.
-**Constraints**: You **CANNOT** use the `yaml` or `configparser` libraries for generation. You must assemble the files purely using Python's multi-line strings (`"""`) and `f-strings`.
-
+**Context**: Các cấu trúc Microservices hiện đại thường xuyên cần migrate hoặc đồng bộ configuration. Khả năng tự động parse và sinh ra config cho nhiều môi trường giúp loại bỏ sai sót từ thao tác manual.
+**Task**: Xây dựng hệ thống đọc cấu hình từ một template tùy chỉnh và mix (kết hợp) với các biến môi trường hiện tại để render ra file `.yaml` hoặc `.ini` chính thức cho ứng dụng.
+**Constraints**: Chỉ sử dụng standard string manipulation, không dùng `Jinja2` hay `PyYAML`. Bổ sung cơ chế validate type (kiểm tra kiểu dữ liệu) ngay trước khi sinh file.
 ## 2. STARTER CODE
 
 ```python
@@ -86,8 +85,7 @@ def generate_yaml(config: dict) -> str:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `configparser`, `PyYAML`, `pydantic-settings`, 12-factor CLI bootstrap tools (like `vue-cli` or `create-react-app`).
-- **Why do it manually**: Relying heavily on package generation tools masks how the files are physically written. By writing raw string templates, you start to understand exactly where syntax constraints like YAML whitespace strictness kick in.
+- **Libraries/Tools**: `configparser`` và các framework chuẩn công nghiệp khác.
 
 ## 5. VALIDATION CRITERIA
 
@@ -100,7 +98,7 @@ def generate_yaml(config: dict) -> str:
 ## 6. EXTENSION CHALLENGES
 
 1. **Extension 1 (File Saving):** Modify the script to actually save the strings into 3 separate files on disk: `config.env`, `config.ini`, and `config.yml`.
-2. **Extension 2 (Base64 Encode):** The password is in raw text. Write logic to apply `base64` encoding to the password solely for the `.env` output, so the raw password isn't immediately readable by shoulder-surfers.
+2. **Extension 2 (Base64 Encode):** The password is in raw text. Write logic to apply `base64` [...] `.env` output, so the raw password isn't immediately readable by shoulder-surfers.
 3. **Extension 3 (Template System):** Refactor the functions out completely. Store the string templates in a `templates/` folder as `.tpl` files with placeholders like `{{DB_HOST}}`. Read the file, use the `.replace()` method loops on the dictionary to inject the config, and spit it back out.
 
 ## SETUP REQUIREMENTS
