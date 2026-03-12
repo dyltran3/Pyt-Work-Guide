@@ -13,21 +13,53 @@ from PIL import Image
 class ImageSteganography:
     def __init__(self):
         """
-        TODO: [... logic ...] 
+        Steganography tool using Least Significant Bit (LSB) encoding.
         """
         pass
 
     def encode(self, input_image_path: str, output_image_path: str, secret_message: str):
         """
-        TODO: [... logic ...] 
+        Encodes a secret message into the pixel data of an image.
         """
-        pass
+        img = Image.open(input_image_path)
+        img = img.convert('RGB')
+        pixels = img.load()
+        
+        # Convert message to bitstring with null terminator
+        bits = ''.join(format(b, '08b') for b in secret_message.encode()) + '00000000'
+        width, height = img.size
+        bit_idx = 0
+        
+        for y in range(height):
+            for x in range(width):
+                if bit_idx < len(bits):
+                    r, g, b = pixels[x, y]
+                    # Modify LSB of Red channel
+                    r = (r & ~1) | int(bits[bit_idx])
+                    pixels[x, y] = (r, g, b)
+                    bit_idx += 1
+                else: break
+            if bit_idx >= len(bits): break
+        img.save(output_image_path)
 
     def decode(self, image_path: str) -> str:
         """
-        TODO: [... logic ...] 
+        Extracts a secret message from the LSBs of an image's Red channel.
         """
-        pass
+        img = Image.open(image_path)
+        pixels = img.load()
+        width, height = img.size
+        bits = ""
+        
+        for y in range(height):
+            for x in range(width):
+                r, g, b = pixels[x, y]
+                bits += str(r & 1)
+                if len(bits) % 8 == 0 and bits[-8:] == '00000000':
+                    # Null terminator found
+                    byte_chunks = [bits[i:i+8] for i in range(0, len(bits) - 8, 8)]
+                    return bytes([int(b, 2) for b in byte_chunks]).decode()
+        return ""
 
 if __name__ == "__main__":
     import os
@@ -42,7 +74,7 @@ if __name__ == "__main__":
         img.save(base_image)
 
         encoded_image = os.path.join(tmp, "encoded.png")
-        secret_msg = "TOP_SECRET: [... logic ...] "
+        secret_msg = "TOP_SECRET: Agent coordinates are 21.0285, 105.8542"
 
         print(f"Encoding expertly fluently: '{secret_msg}'")
         stego.encode(base_image, encoded_image, secret_msg)
@@ -51,7 +83,7 @@ if __name__ == "__main__":
         print(f"Decoded skillfully deftly valiantly: '{decoded_msg}'")
 
         assert secret_msg == decoded_msg
-        print("Success! [... logic ...] ")
+        print("Success! Message recovered perfectly.")
 ```
 
 ## 3. PROGRESSIVE HINTS

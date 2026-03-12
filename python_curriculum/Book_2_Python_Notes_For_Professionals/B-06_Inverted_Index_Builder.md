@@ -94,15 +94,15 @@ def search(self, query: str) -> list[int]:
 ## 5. VALIDATION CRITERIA
 
 - [ ] `add_document` safely tokenizes ignoring cases cleanly (Apple == apple).
-- [ ] The `self.index` [...].
+- [ ] The `self.index` dictionary is structured optimally for fast lookups.
 - [ ] Queries missing entirely return empty brackets `[]` without throwing `KeyError`.
-- [ ] Document order strictly matches term frequency (TF) highest-to-lowest [... logic ...] 
+- [ ] Document order strictly matches term frequency (TF) highest-to-lowest.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Punctuation Stripping):** Currently, `"dog"` and `"dog."` [...]. Use the `string.punctuation` [...].
-2. **Extension 2 (Multi-Word AND Query):** Allow the `search` function natively to accept multi-word phrases (e.g., `"brown fox"`). Evaluate both tokens natively. Return ONLY documents that contain BOTH words (set intersection of their `doc_ids`), [...].
-3. **Extension 3 (Stop-words):** Words like "the", "a", "is" are noise functionally. Create an initialization list of "stop words", [...] [... logic ...] 
+1. **Extension 1 (Punctuation Stripping):** Currently, `"dog"` and `"dog."` are treated as different words. Use `string.punctuation` to strip extra characters.
+2. **Extension 2 (Multi-Word AND Query):** Allow the `search` function to accept multi-word phrases (e.g., `"brown fox"`). Return ONLY documents that contain BOTH words (set intersection).
+3. **Extension 3 (Stop-words):** Words like "the", "a", "is" are noise. Create an initialization list of "stop words" and filter them out during indexing.
 
 ## SETUP REQUIREMENTS
 

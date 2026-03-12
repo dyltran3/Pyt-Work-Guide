@@ -16,15 +16,20 @@ class EventBus:
 
     def subscribe(self, event_type: str, callback: callable):
         """
-        TODO: [... logic ...] 
+        Subscribes a callback to a specific event type or pattern (e.g., 'user.*').
         """
-        pass
+        self._subscribers[event_type].append(callback)
 
     def emit(self, event_type: str, payload: dict = None):
         """
-        TODO: [... logic ...] 
+        Emits an event, triggering all matching subscribers (including wildcards).
         """
-        pass
+        import fnmatch
+        payload = payload or {}
+        for pattern, callbacks in self._subscribers.items():
+            if fnmatch.fnmatch(event_type, pattern):
+                for cb in callbacks:
+                    cb(payload)
 
 if __name__ == "__main__":
     bus = EventBus()
@@ -75,7 +80,9 @@ def emit(self, event_type: str, payload: dict = None):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] [... logic ...] 
+- [ ] Successfully supports specific and wildcard event subscriptions.
+- [ ] Correcty dispatches events to multiple listeners.
+- [ ] Handles empty payloads and unregistered events gracefully.
 
 ## 6. EXTENSION CHALLENGES
 

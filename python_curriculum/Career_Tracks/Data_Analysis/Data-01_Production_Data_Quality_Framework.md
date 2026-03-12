@@ -14,29 +14,56 @@ import numpy as np
 class DataQualityFramework:
     def __init__(self):
         """
-        TODO: [... logic ...] 
+        Initializes the framework with an empty list of validation rules.
         """
         self.rules = []
 
     def add_rule(self, column: str, rule_type: str, **kwargs):
         """
-        TODO: [... logic ...] 
-        Supported rule_types: 'not_null', 'unique', 'range', 'regex'
+        Registers a validation rule for a specific column.
         """
-        pass
+        self.rules.append({"column": column, "rule_type": rule_type, "params": kwargs})
 
     def run_checks(self, df: pd.DataFrame) -> dict:
         """
-        TODO: [... logic ...] 
-        Return [...] [... logic ...] 
+        Runs all registered rules against the provided DataFrame and returns a detailed report.
         """
-        pass
+        report = {"total_rows": len(df), "failures": []}
+        for rule in self.rules:
+            col = rule["column"]
+            rtype = rule["rule_type"]
+            params = rule["params"]
+            
+            if col not in df.columns:
+                report["failures"].append({"column": col, "rule": rtype, "error": "Column missing"})
+                continue
+
+            series = df[col]
+            if rtype == 'not_null':
+                invalid_indices = df[series.isna()].index.tolist()
+            elif rtype == 'unique':
+                invalid_indices = df[series.duplicated()].index.tolist()
+            elif rtype == 'range':
+                invalid_indices = df[~series.between(params.get('min_val', -np.inf), params.get('max_val', np.inf))].index.tolist()
+            elif rtype == 'regex':
+                invalid_indices = df[~series.astype(str).str.match(params.get('pattern', ''))].index.tolist()
+            else:
+                continue
+
+            if invalid_indices:
+                report["failures"].append({
+                    "column": col,
+                    "rule": rtype,
+                    "invalid_count": len(invalid_indices),
+                    "sample_indices": invalid_indices[:5]
+                })
+        return report
 
 if __name__ == "__main__":
     df = pd.DataFrame({
         "id": [1, 2, 3, 3, 5], # Contains duplicate
-        "age": [25, 30, -5, 45, 120], # Contains invalid rationally elegantly
-        "email": ["test@example.com", "invalid-email", "user@test.com", "admin", "null"] # Contains conceptually intelligently
+        "age": [25, 30, -5, 45, 120], # Contains invalid values (-5, 120)
+        "email": ["test@example.com", "invalid-email", "user@test.com", "admin", None] # Contains invalid formats and NULL
     })
 
     dq = DataQualityFramework()
@@ -45,7 +72,7 @@ if __name__ == "__main__":
     dq.add_rule("email", "regex", pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
 
     results = dq.run_checks(df)
-    print("Quality [... logic ...] :")
+    print("Quality Report Summary:")
     print(results)
 ```
 
@@ -76,7 +103,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
             params = rule["params"]
 
             if col not in df.columns:
-                results[f"Rule_{idx}"] = {"status": "failed", "reason": f"Column {col} brilliantly capably smartly"}
+                results[f"Rule_{idx}"] = {"status": "failed", "reason": f"Column {col} missing from DataFrame"}
                 continue
 
             series = df[col]
@@ -98,11 +125,14 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Great Expectations`` và các framework chuẩn công nghiệp khác.
+- **Libraries/Tools**: `Great Expectations`, `Pydantic`, `Pandas Profiling`, `Dequé`.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Mã nguồn chạy thành công không báo lỗi, đạt hiệu năng tiêu chuẩn và cover được các test cases ẩn.
+- [ ] Correctly identifies duplicate IDs.
+- [ ] Correctly flags out-of-range ages.
+- [ ] Correctly validates email patterns using regex.
+- [ ] Returns a structured failure report instead of stopping on first error.
 
 ## 6. EXTENSION CHALLENGES
 

@@ -17,26 +17,39 @@ from Crypto.Util.Padding import pad, unpad
 class SecureFileTransfer:
     def __init__(self, key: bytes):
         """
-        TODO: [... logic ...] 
+        Initializes the transfer tool with a symmetric key.
         """
         self.key = key
+        self.block_size = AES.block_size
 
     def encrypt_file(self, input_path: str, output_path: str):
         """
-        TODO: [... logic ...] 
+        Encrypts a file and prepends the random IV.
         """
-        pass
+        iv = get_random_bytes(self.block_size)
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        with open(input_path, 'rb') as f:
+            plaintext = f.read()
+        ciphertext = cipher.encrypt(pad(plaintext, self.block_size))
+        with open(output_path, 'wb') as f:
+            f.write(iv + ciphertext)
 
     def decrypt_file(self, input_path: str, output_path: str):
         """
-        TODO: [... logic ...] 
+        Extracts IV and decrypts the file.
         """
-        pass
+        with open(input_path, 'rb') as f:
+            iv = f.read(self.block_size)
+            ciphertext = f.read()
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        plaintext = unpad(cipher.decrypt(ciphertext), self.block_size)
+        with open(output_path, 'wb') as f:
+            f.write(plaintext)
 
 if __name__ == "__main__":
     import tempfile
 
-    key = get_random_bytes(32) # AES-256 [... logic ...] 
+    key = get_random_bytes(32) # AES-256 key
     sft = SecureFileTransfer(key)
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -45,7 +58,7 @@ if __name__ == "__main__":
         decrypted_file = os.path.join(tmp, "secret_decrypted.txt")
 
         with open(original_file, "w") as f:
-            f.write("CONFIDENTIAL: [... logic ...] !")
+            f.write("CONFIDENTIAL: Secure data transfer test!")
 
         sft.encrypt_file(original_file, encrypted_file)
         sft.decrypt_file(encrypted_file, decrypted_file)
@@ -53,7 +66,7 @@ if __name__ == "__main__":
         with open(decrypted_file, "r") as f:
             content = f.read()
             assert "CONFIDENTIAL" in content
-            print("[... logic ...] !")
+            print("Success! File recovered.")
 ```
 
 ## 3. PROGRESSIVE HINTS

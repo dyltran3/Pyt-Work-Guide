@@ -29,7 +29,7 @@ def find_primes(n):
 def calculate_stats(data):
     results = []
     for item in data:
-        # Simulate an expensive lookup [... logic ...] 
+        # Simulate an expensive lookup using time.sleep
         time.sleep(0.0001)
         if item > 5000:
             results.append(item * 2)
@@ -45,24 +45,48 @@ def main_unoptimized():
 
 def profile(func):
     """
-    TODO: [... logic ...] 
+    Decorator using cProfile to analyze function performance.
     """
-    pass
+    import functools
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        pr = cProfile.Profile()
+        pr.enable()
+        result = func(*args, **kwargs)
+        pr.disable()
+        s = io.StringIO()
+        ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
+        ps.print_stats(10)
+        print(s.getvalue())
+        return result
+    return wrapper
 
 @profile
 def main_optimized():
     """
-    TODO: [... logic ...] 
+    Optimized version using Sieve of Eratosthenes and list comprehensions.
     """
-    pass
+    data = [random.randint(1, 10000) for _ in range(10_000)]
+    
+    def sieve(n):
+        is_prime = [True] * (n + 1)
+        for p in range(2, int(n**0.5) + 1):
+            if is_prime[p]:
+                for i in range(p*p, n+1, p):
+                    is_prime[i] = False
+        return [p for p in range(2, n+1) if is_prime[p]]
+
+    primes = sieve(5000)
+    stats = sum(item * 2 for item in data if item > 5000)
+    return len(primes), stats
 
 if __name__ == "__main__":
-    print("Running Unoptimized [... logic ...] ")
+    print("Running Unoptimized version...")
     start = time.time()
     main_unoptimized()
     print(f"Unoptimized took: {time.time() - start:.2f}s")
 
-    print("\nRunning Optimized [... logic ...] ")
+    print("\nRunning Optimized version...")
     main_optimized()
 ```
 
@@ -96,7 +120,7 @@ def profile(func):
 def main_optimized():
     data = [random.randint(1, 10000) for _ in range(10_000)]
 
-    # Optimizer 1: [... logic ...] 
+    # Optimizer 1: Using Sieve of Eratosthenes (O(n log log n))
     def find_primes_opt(n):
         sieve = [True] * (n + 1)
         for p in range(2, int(n**0.5) + 1):
@@ -107,8 +131,8 @@ def main_optimized():
 
     primes = find_primes_opt(5000)
 
-    # Optimizer 2: [... logic ...] 
-    stats = sum(item * 2 [...] > 5000) # Removed time.sleep [... logic ...] 
+    # Optimizer 2: Built-in sum() and generator expression
+    stats = sum(item * 2 for item in data if item > 5000) # Removed time.sleep for speed.
 
     return len(primes), stats
 ```
@@ -119,7 +143,9 @@ def main_optimized():
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] [... logic ...] 
+- [ ] Correctly implements `cProfile` decorator for performance analysis.
+- [ ] Demonstrates significant speedup using better algorithms (Sieve).
+- [ ] Replaces slow loops with optimized sum/generator expressions.
 
 ## 6. EXTENSION CHALLENGES
 

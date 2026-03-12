@@ -31,33 +31,50 @@ class ETLPipeline:
 
     def extract(self, csv_filepath: str, chunk_size=10_000):
         """
-        TODO:
-        1. Open the CSV with the `csv.DictReader`.
-        2. Read exactly `chunk_size` rows into a list.
-        3. Yield the list.
-        4. Repeat until EOF is reached [... logic ...] 
+        Extracts data in chunks using a generator to avoid memory overflow.
         """
-        pass
+        with open(csv_filepath, 'r') as f:
+            reader = csv.DictReader(f)
+            chunk = []
+            for row in reader:
+                chunk.append(row)
+                if len(chunk) == chunk_size:
+                    yield chunk
+                    chunk = []
+            if chunk:
+                yield chunk
 
     def transform(self, chunk: list[dict]) -> list[tuple]:
         """
-        TODO:
-        1. Iterate through the dictionary chunk structurally intelligently.
-        2. If status == 'FAILED', skip the row [... logic ...] 
-        3. Convert 'amount' from string ($10.50) to float (10.5) successfully optimally.
-        4. Return a list of Tuples [... logic ...] 
+        Cleans data: skips 'FAILED' records and converts amounts to float.
         """
-        pass
+        result = []
+        for row in chunk:
+            if row['status'] == 'FAILED':
+                continue
+            try:
+                amt = float(row['amount'].replace("$", ""))
+                result.append((row['tx_id'], int(row['user_id']), amt, row['status']))
+            except (ValueError, KeyError):
+                pass
+        return result
 
     def load(self, tuples: list[tuple]):
         """
-        TODO: Use self.conn.executemany() [... logic ...] 
+        Batch inserts data into the SQLite database.
         """
-        pass
+        self.conn.executemany(
+            "INSERT INTO transactions (tx_id, user_id, amount, status) VALUES (?,?,?,?)",
+            tuples
+        )
+        self.conn.commit()
 
     def run(self, csv_file: str):
-        """TODO: Chain Extract -> Transform -> Load [... logic ...] """
-        pass
+        """
+        Executes the ETL process by chaining generators.
+        """
+        for chunk in self.extract(csv_file):
+            self.load(self.transform(chunk))
 
 if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as tmp:
@@ -76,7 +93,7 @@ if __name__ == "__main__":
 
         print(f"Total inserted smoothly natively safely: {total}")
         assert failed == 0
-        assert total > 50_000 # Since ~25% were randomly FAILED [... logic ...] 
+        assert total > 50_000 # Since ~25% were randomly FAILED and should be filtered out.
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -100,7 +117,7 @@ def extract(self, csv_filepath: str, chunk_size=10_000):
 ```
 
 **HINT-2 (Partial)**:
-Transform [... logic ...] :
+Modern ETL transformation usually involves complex data cleaning and schema mapping:
 
 ```python
 def transform(self, chunk: list[dict]) -> list[tuple]:
@@ -112,7 +129,7 @@ def transform(self, chunk: list[dict]) -> list[tuple]:
             amt = float(row['amount'].replace("$", ""))
             cleaned.append((row['tx_id'], int(row['user_id']), amt, row['status']))
         except ValueError:
-            pass # Skip corrupted rows [... logic ...] 
+            pass # Skip corrupted rows or invalid formats
     return cleaned
 ```
 
@@ -134,16 +151,18 @@ def run(self, csv_file: str):
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: Apache Airflow [... logic ...] 
+- **Libraries/Tools**: Apache Airflow, Pandas, Spark, AWS Glue.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Processes in chunks [... logic ...] 
+- [ ] Processes data in chunks to maintain low memory footprint.
+- [ ] Correctly filters out 'FAILED' records and transforms currency data.
+- [ ] Uses batch inserts for efficient data loading.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1:** Multi-threading the transform [... logic ...] 
-2. **Extension 2:** Implement logging [... logic ...] 
+1. **Extension 1:** Multi-threading the transform/load phase for increased throughput.
+2. **Extension 2:** Implement logging and a summary report of skipped/failed rows.
 
 ## SETUP REQUIREMENTS
 

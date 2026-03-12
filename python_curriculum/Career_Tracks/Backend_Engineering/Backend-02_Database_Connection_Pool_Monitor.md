@@ -24,27 +24,49 @@ class Connection:
 class ConnectionPool:
     def __init__(self, size=5):
         """
-        TODO: [... logic ...] 
+        Initializes the pool with a fixed number of connections.
         """
-        pass
+        import queue
+        self.size = size
+        self._pool = queue.Queue(maxsize=size)
+        self._active = 0
+        self._lock = threading.Lock()
+        for i in range(size):
+            self._pool.put(Connection(i))
 
     def acquire(self, timeout=2.0) -> Connection:
         """
-        TODO: [... logic ...] 
+        Acquires a connection from the pool, blocking if none are available.
         """
-        pass
+        import queue
+        try:
+            conn = self._pool.get(timeout=timeout)
+            with self._lock:
+                self._active += 1
+            conn.in_use = True
+            return conn
+        except queue.Empty:
+            raise TimeoutError(f"Connection pool exhausted (max size: {self.size})")
 
     def release(self, conn: Connection):
         """
-        TODO: [... logic ...] 
+        Releases a connection back into the pool.
         """
-        pass
+        conn.in_use = False
+        with self._lock:
+            self._active -= 1
+        self._pool.put(conn)
 
     def get_stats(self) -> dict:
         """
-        TODO: [... logic ...] 
+        Returns real-time occupancy statistics of the pool.
         """
-        pass
+        with self._lock:
+            return {
+                "active_connections": self._active,
+                "available_connections": self.size - self._active,
+                "total_capacity": self.size
+            }
 
 if __name__ == "__main__":
     pool = ConnectionPool(size=3)
@@ -52,19 +74,19 @@ if __name__ == "__main__":
     def worker(worker_id):
         try:
             conn = pool.acquire(timeout=1.0)
-            print(f"Worker {worker_id} [... logic ...] {conn.id}")
+            print(f"Worker {worker_id} acquired connection {conn.id}")
             conn.execute("SELECT 1")
             pool.release(conn)
-            print(f"Worker {worker_id} [... logic ...] {conn.id}")
+            print(f"Worker {worker_id} released connection {conn.id}")
         except TimeoutError:
-            print(f"Worker {worker_id} [... logic ...] ")
+            print(f"Worker {worker_id} timed out waiting for connection")
 
     threads = [threading.Thread(target=worker, args=(i,)) for i in range(10)]
     for t in threads:
         t.start()
 
     for _ in range(3):
-        print("STATS [... logic ...] :", pool.get_stats())
+        print("STATS (Real-time):", pool.get_stats())
         time.sleep(0.05)
 
     for t in threads:
@@ -103,7 +125,7 @@ class ConnectionPool:
             conn.in_use = True
             return conn
         except queue.Empty:
-            raise TimeoutError("Pool [... logic ...] ")
+            raise TimeoutError("Pool exhausted - connection timeout reached")
 
     def release(self, conn: Connection):
         conn.in_use = False
@@ -114,11 +136,13 @@ class ConnectionPool:
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `SQLAlchemy [... logic ...] `` và các framework chuẩn công nghiệp khác.
+- **Libraries/Tools**: `SQLAlchemy`, `psycopg2`, `aiopg` (async), `sqlalchemy.pool`.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Incorporates [... logic ...] 
+- [ ] Correctly implements thread-safe connection acquisition and release.
+- [ ] Handles pool exhaustion with appropriate TimeoutError.
+- [ ] Provides accurate real-time stats for monitoring.
 
 ## 6. EXTENSION CHALLENGES
 

@@ -28,18 +28,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        - name: Install dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
+          pip install ruff pytest pytest-cov
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Lint with flake8
+      - name: Lint with Ruff
         run: |
-          # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          ruff check . --statistics
 
       - name: Test with pytest
         run: |
@@ -54,10 +51,10 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 **HINT-2 (Partial)**:
 
 ```yaml
-- name: Run Black/Ruff [... logic ...] 
-  run: ruff check . && black --check .
+- name: Run Ruff check
+  run: ruff check .
 
-- name: Upload coverage [... logic ...] 
+- name: Upload coverage report
   uses: codecov/codecov-action@v3
   with:
     files: ./coverage.xml
@@ -65,7 +62,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `GitHub [... logic ...] `` và các framework chuẩn công nghiệp khác.
+- **Libraries/Tools**: `GitHub Actions`, `GitLab CI`, `Jenkins`, `CircleCI`.
 
 ## 5. VALIDATION CRITERIA
 

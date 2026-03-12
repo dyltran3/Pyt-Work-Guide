@@ -7,22 +7,21 @@
 **Constraints**: Không chứa hardcoded credentials trong Git. Giảm Base size Image sau khi đóng gói Build cuối cùng càng nhẹ càng tốt.
 ## 2. STARTER CODE
 
-```dockerfile
-# TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        FROM python:3.11-slim as base
-
+# Builder stage
+FROM python:3.11-slim as builder
 WORKDIR /app
 COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
 
-# TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        RUN pip install --no-cache-dir -r requirements.txt
-
+# Final stage
+FROM python:3.11-slim
+WORKDIR /app
+# Copy installed dependencies from builder
+COPY --from=builder /root/.local /root/.local
 COPY src/ .
 
-# TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
+ENV PATH=/root/.local/bin:$PATH
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 ```yaml
 # docker-compose.yml
@@ -48,7 +47,7 @@ services:
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
-Modify [... logic ...] 
+Modularize your Dockerfile into stages:
 
 ```dockerfile
 FROM python:3.11-slim as builder
@@ -68,11 +67,14 @@ CMD ["python", "main.py"]
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `Docker [... logic ...] `` và các framework chuẩn công nghiệp khác.
+- **Libraries/Tools**: `Docker Desktop`, `Kubernetes`, `Podman`, `Terraform`.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Mã nguồn chạy thành công không báo lỗi, đạt hiệu năng tiêu chuẩn và cover được các test cases ẩn.
+- [ ] Dockerfile uses multi-stage build to reduce image size.
+- [ ] Image uses a non-root user or minimal base (slim/alpine).
+- [ ] Docker-compose correctly links web service to redis.
+- [ ] Application starts successfully within the container environment.
 
 ## 6. EXTENSION CHALLENGES
 

@@ -16,9 +16,9 @@ class PaymentGateway:
          self.base_url = "https://mock-payment-api.com/v1"
 
     def charge(self, amount: float, source: str) -> dict:
-         """
-         TODO: [... logic ...] 
-         """
+        """
+        Sends a POST request to the payment gateway.
+        """
          response = requests.post(
              f"{self.base_url}/charges",
              headers={"Authorization": f"Bearer {self.api_key}"},
@@ -27,17 +27,29 @@ class PaymentGateway:
          response.raise_for_status()
          return response.json()
 
-# --- TESTS (to [... logic ...] ) ---
+# --- TESTS (to be completed) ---
 import pytest
 from unittest.mock import patch, Mock
 
-def test_charge_success():
-    """TODO: [... logic ...] """
-    pass
+def test_charge_success(mock_post):
+    """Verifies successful payment processing."""
+    gateway = PaymentGateway("fake_key")
+    mock_response = Mock()
+    mock_response.json.return_value = {"id": "ch_123", "status": "succeeded"}
+    mock_response.raise_for_status.return_value = None
+    mock_post.return_value = mock_response
 
-def test_charge_network_error():
-    """TODO: [... logic ...] """
-    pass
+    result = gateway.charge(100.0, "tok_mastercard")
+    assert result["status"] == "succeeded"
+    mock_post.assert_called_once()
+
+@patch('requests.post')
+def test_charge_network_error(mock_post):
+    """Verifies handling of connection errors."""
+    mock_post.side_effect = requests.ConnectionError("Network down")
+    gateway = PaymentGateway("fake_key")
+    with pytest.raises(requests.ConnectionError):
+        gateway.charge(50.0, "tok_visa")
 ```
 
 ## 3. PROGRESSIVE HINTS

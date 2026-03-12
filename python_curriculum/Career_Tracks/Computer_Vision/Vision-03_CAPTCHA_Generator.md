@@ -15,24 +15,60 @@ import string
 class CaptchaGenerator:
     def __init__(self, bg_color=(255, 255, 255), fg_color=(0, 0, 0), length=6):
         """
-        TODO: [... logic ...] 
+    def __init__(self, bg_color=(255, 255, 255), fg_color=(0, 0, 0), length=6, font_path="arial.ttf"):
+        """
+        Initializes the CAPTCHA generator with background color, foreground color,
+        CAPTCHA text length, and font path.
         """
         self.bg_color = bg_color
         self.fg_color = fg_color
         self.length = length
+        self.font_path = font_path
 
     def generate_random_string(self) -> str:
         """
-        TODO: [... logic ...] 
+        Generates a random string of alphanumeric characters for the CAPTCHA.
         """
-        pass
+        characters = string.ascii_letters + string.digits
+        return ''.join(random.choices(characters, k=self.length))
 
     def create_captcha(self, text: str, output_path: str):
         """
-        TODO: [... logic ...] 
-        Include noise [... logic ...] 
+        Generates a CAPTCHA image with the given text, including noise and distortions,
+        and saves it to the specified output path.
         """
-        pass
+        width, height = 200, 80
+        image = Image.new('RGB', (width, height), self.bg_color)
+        draw = ImageDraw.Draw(image)
+
+        try:
+            font = ImageFont.truetype(self.font_path, 40)
+        except OSError:
+            font = ImageFont.load_default()
+            print(f"Warning: Font '{self.font_path}' not found. Using default font.")
+
+        text_width = draw.textlength(text, font)
+        text_height = font.getbbox(text)[3] - font.getbbox(text)[1] # Get actual text height
+
+        x = (width - text_width) / 2
+        y = (height - text_height) / 2
+        draw.text((x, y), text, font=font, fill=self.fg_color)
+
+        # Add noise points
+        for _ in range(50):
+            x1 = random.randint(0, width)
+            y1 = random.randint(0, height)
+            draw.point((x1, y1), fill=self.fg_color)
+
+        # Add noise lines
+        for _ in range(5):
+            x1 = random.randint(0, width)
+            y1 = random.randint(0, height)
+            x2 = random.randint(0, width)
+            y2 = random.randint(0, height)
+            draw.line(((x1, y1), (x2, y2)), fill=self.fg_color, width=2)
+
+        image.save(output_path)
 
 if __name__ == "__main__":
     import os
@@ -43,9 +79,9 @@ if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as tmp:
         captcha_path = os.path.join(tmp, "captcha.png")
         text = generator.generate_random_string()
-        print(f"Generating CAPTCHA [... logic ...] {text} at {captcha_path}...")
+        print(f"Generating CAPTCHA for text: {text} at {captcha_path}...")
         generator.create_captcha(text, captcha_path)
-        print("Done [... logic ...] ")
+        print("Done!")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -74,7 +110,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
             font = ImageFont.truetype("arial.ttf", 40)
         except OSError:
             font = ImageFont.load_default()
-            print("Using [... logic ...] ")
+            print("Using default font.")
 
         text_width = draw.textlength(text, font)
 

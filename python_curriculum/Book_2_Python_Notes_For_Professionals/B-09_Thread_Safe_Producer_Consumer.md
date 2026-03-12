@@ -36,7 +36,7 @@ def consumer(consumer_id: int):
     3. If item is None (Sentinel value), call task_queue.task_done() and break.
     4. Otherwise, sleep briefly to simulate processing.
     5. Safely acquire counter_lock dynamically globally, increment processed_count.
-    6. Always mathematically call task_queue.task_done() [... logic ...] 
+    6. Always mathematically call task_queue.task_done()
     """
     pass
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     # Await producers explicitly
 
-    # Send Sentinel values implicitly destroying consumers [... logic ...] 
+    # Send Sentinel values to stop consumers
 
     # Await consumers dynamically cleanly
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-To launch a Thread, execute `t = threading.Thread(target=producer, args=(1, 10))`. Proceed executing `t.start()`. Append [...] [... logic ...] 
+To launch a Thread, execute `t = threading.Thread(target=producer, args=(1, 10))`. Proceed by executing `t.start()`.
 
 **HINT-2 (Partial)**:
 For the consumer logic block locking perfectly:
@@ -106,13 +106,13 @@ if __name__ == "__main__":
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] leverages native Threading module [... logic ...] 
-- [ ] Implements the `counter_lock` [... logic ...] 
-- [ ] Incorporates Poison Pills gracefully cleanly.
+- [ ] leverages native Threading module correctly.
+- [ ] Implements the `counter_lock` properly.
+- [ ] Incorporates Poison Pills gracefully.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Events & Signals:** Sentinel values are functional [... logic ...] `threading.Event()`. Construct `stop_event = threading.Event()`.
+1. **Events & Signals:** Sentinel values are functional. Experiment with `threading.Event()`.
 2. **Error Propagation:** Implement a localized shared exception tracking array natively appending `sys.exc_info()`.
 3. **Queue Timeout Handling:** `task_queue.get(timeout=2.0)` blocks successfully. Catch Native `Empty` Exceptions cleanly.
 

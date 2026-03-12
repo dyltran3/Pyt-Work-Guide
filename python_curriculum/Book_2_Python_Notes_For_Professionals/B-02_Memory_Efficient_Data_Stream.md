@@ -98,7 +98,7 @@ def process_stream_continuously(stream):
 
 1. **Extension 1 (Exponential Moving Average):** Financial data usually tracks Exponential Moving Average (EMA) rather than simple total means so the data reacts to _recent_ changes faster. Implement a secondary mathematical pipeline calculating an EMA with an `alpha` factor of `0.1`.
 2. **Extension 2 (Corrupted Iterables):** Introduce `None` and String objects into the mock data stream (representing network stutter or bad JSON parsing). Implement `try/except` guard rails inside `process_stream_continuously` that gracefully skips broken metrics without permanently destroying the Welford calculations or crashing the stream.
-3. **Extension 3 (Decoupled Windows):** Rather than total running numbers, implement a sliding window tracker. Calculate the mean of _only_ the last `100` elements mathematically. Use `collections.deque(maxlen=100)` [...]-off [... logic ...] 
+3. **Extension 3 (Decoupled Windows):** Rather than total running numbers, implement a sliding window tracker. Calculate the mean of _only_ the last `100` elements mathematically. Use `collections.deque(maxlen=100)` 
 
 ## SETUP REQUIREMENTS
 

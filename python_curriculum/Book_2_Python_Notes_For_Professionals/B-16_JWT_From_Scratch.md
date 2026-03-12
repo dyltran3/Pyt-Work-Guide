@@ -20,21 +20,55 @@ class JWTBuilder:
 
     def _base64url_encode(self, data: bytes) -> str:
         """
-        TODO: Implement [... logic ...] 
+        Encodes bytes to base64url string without padding.
         """
-        pass
+        return base64.urlsafe_b64encode(data).decode().rstrip('=')
 
-    def encode(self, payload: dict) -> str:
+    def _base64url_decode(self, s: str) -> bytes:
         """
-        TODO: Create [... logic ...] 
+        Decodes base64url string back to bytes with proper padding.
         """
-        pass
+        padding = 4 - len(s) % 4
+        return base64.urlsafe_b64decode(s + '=' * (padding % 4))
+
+    def encode(self, payload: dict, expire_seconds: int = 3600) -> str:
+        """
+        Creates a JWT token with header, payload, and HMAC-SHA256 signature.
+        """
+        header = {"alg": "HS256", "typ": "JWT"}
+        payload = {**payload, "exp": int(time.time()) + expire_seconds}
+        
+        b64h = self._base64url_encode(json.dumps(header).encode())
+        b64p = self._base64url_encode(json.dumps(payload).encode())
+        
+        signing_input = f"{b64h}.{b64p}".encode()
+        sig = hmac.new(self.secret, signing_input, hashlib.sha256).digest()
+        b64s = self._base64url_encode(sig)
+        
+        return f"{b64h}.{b64p}.{b64s}"
 
     def decode(self, token: str) -> dict:
         """
-        TODO: Implement [... logic ...] 
+        Verifies the signature and expiration of a JWT token.
         """
-        pass
+        parts = token.split('.')
+        if len(parts) != 3:
+            raise ValueError("Invalid JWT structure")
+        
+        b64h, b64p, b64s = parts
+        signing_input = f"{b64h}.{b64p}".encode()
+        expected_sig = hmac.new(self.secret, signing_input, hashlib.sha256).digest()
+        actual_sig = self._base64url_decode(b64s)
+        
+        import secrets
+        if not secrets.compare_digest(expected_sig, actual_sig):
+            raise ValueError("Invalid signature - token tampered!")
+            
+        payload = json.loads(self._base64url_decode(b64p))
+        if "exp" in payload and payload["exp"] < time.time():
+            raise ValueError("Token expired")
+            
+        return payload
 
 if __name__ == "__main__":
     jwt = JWTBuilder("supersecret")
@@ -77,12 +111,14 @@ def encode(self, payload: dict) -> str:
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] [... logic ...] 
+- [ ] Correctly encodes header and payload as base64url.
+- [ ] Generates and verifies HMAC-SHA256 signatures securely.
+- [ ] Properly handles expired tokens and tampered signatures.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1:** Implement [... logic ...] 
-2. **Extension 2:** Implement [... logic ...] 
+1. **Extension 1:** Add support for multiple signing algorithms (e.g., HS512).
+2. **Extension 2:** Implement a 'Blacklist' or 'Revocation' system to invalidate tokens before they expire.
 
 ## SETUP REQUIREMENTS
 

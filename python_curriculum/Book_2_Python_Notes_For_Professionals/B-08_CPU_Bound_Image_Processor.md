@@ -49,7 +49,7 @@ if __name__ == "__main__":
     print(f"Sequential: {seq_duration:.2f} seconds")
 
     # Notice: Multiprocessing on Windows requires the script execution
-    # [...] __main__ block [... logic ...] 
+    # to be inside a __main__ block to avoid infinite recursion loops.
 
     print("\\nTesting Multiprocessing...")
     start_par = time.time()
@@ -66,10 +66,10 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-Sequential processing [... logic ...] `[heavy_image_filter_simulation(i) for i in task_ids]` [... logic ...] 
+Sequential processing `[heavy_image_filter_simulation(i) for i in task_ids]` 
 
 **HINT-2 (Partial)**:
-`multiprocessing.Pool` implements a context manager `with` [...] [... logic ...] 
+`multiprocessing.Pool` implements a context manager `with` for clean cleanup.
 
 ```python
 from multiprocessing import Pool, cpu_count
@@ -77,13 +77,13 @@ from multiprocessing import Pool, cpu_count
 def process_parallel(task_ids):
     cores = cpu_count()
     with Pool(processes=cores) as pool:
-        # Map [...]
+        # Map the task list to our simulation function.
         results = pool.map(heavy_image_filter_simulation, task_ids)
     return results
 ```
 
 **HINT-3 (Near-solution)**:
-The provided `process_parallel` is essentially the complete solution [... logic ...] `if __name__ == "__main__":` block encapsulates executing [... logic ...] -bomb recursion loops [... logic ...] 
+The provided `process_parallel` is essentially the complete solution.
 
 ## 4. REAL-WORLD CONNECTIONS
 
@@ -91,14 +91,14 @@ The provided `process_parallel` is essentially the complete solution [... logic 
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Bypasses execution [... logic ...] -time [... logic ...] 
-- [ ] Executes cleanly utilizing `pool.map` evaluating outputs [... logic ...] 
+- [ ] Bypasses execution deadlocks.
+- [ ] Executes cleanly utilizing `pool.map` evaluating outputs.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Chunk Sizing):** The `pool.map` method dynamically accepts a `chunksize` argument evaluating internally. If tasks execute insanely fast (like 1ms), the IPC (Inter-Process Communication) [...] [... logic ...] `chunksize=5` observing clock time impacts [... logic ...] 
-2. **Extension 2 (Exception Masking):** What happens if `heavy_image_filter_simulation` throws a `ValueError` dynamically midway? The entire pool crashes [... logic ...] `.imap_unordered` wrapping `try/except` [... logic ...] 
-3. **Extension 3 (Actual Pixels):** Remove the simulation [... logic ...] `PIL` (Pillow). Utilize Python `glob` gathering 100 `.jpg` images [... logic ...] `multiprocessing` to apply `.convert('L')` (grayscale) actively saving them [... logic ...] Task Manager.
+1. **Extension 1 (Chunk Sizing):** The `pool.map` method dynamically accepts a `chunksize` argument. If tasks execute very fast, adjust `chunksize=5` observing clock time impacts.
+2. **Extension 2 (Exception Masking):** Use `.imap_unordered` inside a `try/except` block to handle errors midway.
+3. **Extension 3 (Actual Pixels):** Remove the simulation and use `PIL` (Pillow) to process actual images.
 
 ## SETUP REQUIREMENTS
 

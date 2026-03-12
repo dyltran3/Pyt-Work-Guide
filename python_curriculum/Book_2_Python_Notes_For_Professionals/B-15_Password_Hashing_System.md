@@ -13,42 +13,48 @@ import os
 
 class AuthSystem:
     def __init__(self):
-        # Mocks a SQLite database [... logic ...] 
+        # Mocks a SQLite database in memory
         self.db = {}
 
     def hash_password(self, password: str, salt: bytes) -> str:
         """
-        TODO:
-        1. Leverage hashlib.pbkdf2_hmac [... logic ...] 
+        Hashes a password using PBKDF2 with a high iteration count.
         """
-        pass
+        key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 260_000)
+        return key.hex()
 
     def register_user(self, email: str, password: str):
         """
-        TODO:
-        1. Generate a secure random salt [... logic ...] 
+        Generates a random salt and stores the user's hash.
         """
-        pass
+        salt = os.urandom(32)
+        pwd_hash = self.hash_password(password, salt)
+        self.db[email] = {"salt": salt.hex(), "password_hash": pwd_hash}
 
     def login_user(self, email: str, password: str) -> bool:
         """
-        TODO:
-        1. Fetch salt [... logic ...] 
+        Fetches the user's salt and verifies the password using constant-time comparison.
         """
-        pass
+        record = self.db.get(email)
+        if not record:
+            return False
+        import secrets
+        salt = bytes.fromhex(record["salt"])
+        attempt_hash = self.hash_password(password, salt)
+        return secrets.compare_digest(attempt_hash, record["password_hash"])
 
 if __name__ == "__main__":
     auth = AuthSystem()
 
     auth.register_user("admin@example.com", "SuperSecret123!")
 
-    # Valid [... logic ...] 
+    # Valid login credentials
     assert auth.login_user("admin@example.com", "SuperSecret123!") is True
     assert auth.login_user("admin@example.com", "WrongPassword") is False
     assert "admin@example.com" in auth.db
     assert auth.db["admin@example.com"]["password_hash"] != "SuperSecret123!"
 
-    print("Authentication [... logic ...] ")
+    print("Authentication system verified successfully.")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -57,7 +63,7 @@ if __name__ == "__main__":
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
-Using [... logic ...] 
+Using `secrets.compare_digest` is critical to prevent attackers from guessing passwords by measuring the time the server takes to respond.
 
 **HINT-3 (Near-solution)**:
 
@@ -86,12 +92,14 @@ def register_user(self, email: str, password: str):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Incorporates [... logic ...] 
+- [ ] Correctly implements PBKDF2 with salt.
+- [ ] Uses constant-time comparison for verification.
+- [ ] Properly handles non-existent users.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1:** [... logic ...] 
-2. **Extension 2:** Implement [... logic ...] 
+1. **Extension 1:** Implement password complexity requirements (regex).
+2. **Extension 2:** Implement account lockout after X failed attempts.
 
 ## SETUP REQUIREMENTS
 

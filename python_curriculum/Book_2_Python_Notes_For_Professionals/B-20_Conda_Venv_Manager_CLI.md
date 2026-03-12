@@ -21,26 +21,51 @@ class EnvManager:
 
     def create_venv(self, env_name: str, python_version: str = None):
         """
-        TODO: [... logic ...] 
+        Creates a new virtual environment in the 'envs' directory.
         """
-        pass
+        env_path = self.base_dir / env_name
+        if env_path.exists():
+            print(f"Environment '{env_name}' already exists.")
+            return
+        print(f"Creating venv '{env_name}'...")
+        subprocess.run([sys.executable, "-m", "venv", str(env_path)], check=True)
+        print(f"Successfully created: {env_path}")
 
     def list_envs(self):
         """
-        TODO: [... logic ...] 
+        Lists all directories in the 'envs' folder.
         """
-        pass
+        envs = [d.name for d in self.base_dir.iterdir() if d.is_dir()]
+        for e in envs:
+            print(f"  - {e}")
+        return envs
 
     def freeze_env(self, env_name: str):
         """
-        TODO: [... logic ...] 
+        Executes 'pip freeze' for a specific environment.
         """
-        pass
+        env_path = self.base_dir / env_name
+        if not env_path.exists():
+            print(f"Environment '{env_name}' not found.")
+            return ""
+        pip_path = env_path / ("Scripts/pip.exe" if os.name == 'nt' else "bin/pip")
+        result = subprocess.run([str(pip_path), "freeze"], capture_output=True, text=True)
+        print(result.stdout)
+        return result.stdout
 
 def main():
-    parser = argparse.ArgumentParser(description="Clean [... logic ...] ")
-    # TODO: [... logic ...] 
-    pass
+    parser = argparse.ArgumentParser(description="Python Environment Manager CLI")
+    parser.add_argument("action", choices=["create", "list", "freeze"])
+    parser.add_argument("name", nargs="?")
+    args = parser.parse_args()
+    
+    mgr = EnvManager()
+    if args.action == "create":
+        mgr.create_venv(args.name)
+    elif args.action == "list":
+        mgr.list_envs()
+    elif args.action == "freeze":
+        mgr.freeze_env(args.name)
 
 if __name__ == "__main__":
     main()
@@ -57,13 +82,13 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 def create_venv(self, env_name: str, python_version: str = None):
     env_path = self.base_dir / env_name
     if env_path.exists():
-        print(f"Environment {env_name} [... logic ...] ")
+        print(f"Environment {env_name} already exists, skipping...")
         return
 
     cmd = [sys.executable, "-m", "venv", str(env_path)]
-    print(f"Creating [... logic ...] ")
+    print(f"Creating virtual environment at {env_path}...")
     subprocess.run(cmd, check=True)
-    print("Done [... logic ...] ")
+    print("Done! Environment ready.")
 ```
 
 **HINT-3 (Near-solution)**:
@@ -72,7 +97,7 @@ def create_venv(self, env_name: str, python_version: str = None):
 def freeze_env(self, env_name: str):
     env_path = self.base_dir / env_name
     if not env_path.exists():
-        print("Not [... logic ...] ")
+        print("Not Found: Environment doesn't exist.")
         return
 
     if os.name == 'nt':
@@ -90,7 +115,9 @@ def freeze_env(self, env_name: str):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Incorporates [... logic ...] 
+- [ ] Correctly uses `subprocess` to call external commands.
+- [ ] Handles cross-platform paths for `pip` correctly (Windows vs Unix).
+- [ ] Provides a clean CLI interface for environment management.
 
 ## 6. EXTENSION CHALLENGES
 

@@ -35,9 +35,12 @@
     { "id": "B-18", "title": "Reactive Event System", "track": "Book 2: Python Notes For Professionals" },
     { "id": "B-19", "title": "Profiling & Optimization", "track": "Book 2: Python Notes For Professionals" },
     { "id": "B-20", "title": "Conda/venv Manager CLI", "track": "Book 2: Python Notes For Professionals" },
+    { "id": "B-21", "title": "Concurrency Shootout", "track": "Book 2: Python Notes For Professionals" },
+    { "id": "B-22", "title": "Modern Python 3.11+", "track": "Book 2: Python Notes For Professionals" },
     { "id": "Backend-01", "title": "Production FastAPI Boilerplate", "track": "Career Tracks - Backend Engineering" },
     { "id": "Backend-02", "title": "Database Connection Pool Monitor", "track": "Career Tracks - Backend Engineering" },
     { "id": "Backend-03", "title": "Async Task Queue từ đầu", "track": "Career Tracks - Backend Engineering" },
+    { "id": "Backend-04", "title": "Database Optimization", "track": "Career Tracks - Backend Engineering" },
     { "id": "Data-01", "title": "Production Data Quality Framework", "track": "Career Tracks - Data Analysis" },
     { "id": "Data-02", "title": "Time Series Anomaly Detector", "track": "Career Tracks - Data Analysis" },
     { "id": "Data-03", "title": "SQL Performance Analyzer", "track": "Career Tracks - Data Analysis" },
@@ -51,7 +54,11 @@
     { "id": "Agent-02", "title": "Multi-Step Reasoning Agent", "track": "Career Tracks - AI Agent" },
     { "id": "Agent-03", "title": "🏆 MAIN: AI Agent Project", "track": "Career Tracks - AI Agent" },
     { "id": "Test-01", "title": "Advanced Pytest Mocks", "track": "Career Tracks - Testing & QA" },
+    { "id": "Test-02", "title": "Property-Based Testing", "track": "Career Tracks - Testing & QA" },
+    { "id": "Test-03", "title": "Integration Testing & Fixtures", "track": "Career Tracks - Testing & QA" },
+    { "id": "Test-04", "title": "Snapshot & Mutation Testing", "track": "Career Tracks - Testing & QA" },
     { "id": "DevOps-01", "title": "Dockerized Microservices", "track": "Career Tracks - DevOps Engineering" },
-    { "id": "DevOps-02", "title": "CI/CD Pipeline", "track": "Career Tracks - DevOps Engineering" }
+    { "id": "DevOps-02", "title": "CI/CD Pipeline", "track": "Career Tracks - DevOps Engineering" },
+    { "id": "DevOps-03", "title": "Production Observability", "track": "Career Tracks - DevOps Engineering" }
   ]
 }

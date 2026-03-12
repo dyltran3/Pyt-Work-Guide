@@ -13,25 +13,42 @@ import time
 
 class SQLAnalyzer:
     def __init__(self, db_path: str):
+        """
+        Initializes the analyzer with a connection to a SQLite database.
+        """
         self.conn = sqlite3.connect(db_path)
 
     def setup_mock_data(self):
         """
-        TODO: [... logic ...] 
+        Sets up mock data for testing purposes.
         """
-        pass
+        cursor = self.conn.cursor()
+        cursor.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, status TEXT)")
+        cursor.execute("CREATE TABLE transactions (tx_id INTEGER PRIMARY KEY, user_id INTEGER, amount REAL)")
+
+        users = [(i, f"User{i}", 20 + (i % 50), "active" if i % 2 == 0 else "inactive") for i in range(1000)]
+        cursor.executemany("INSERT INTO users VALUES (?, ?, ?, ?)", users)
+
+        transactions = [(i, i % 1000, 50.0 + (i % 200)) for i in range(5000)]
+        cursor.executemany("INSERT INTO transactions VALUES (?, ?, ?)", transactions)
+
+        self.conn.commit()
 
     def explain_query(self, query: str) -> list:
         """
-        TODO: [... logic ...] 
+        Runs EXPLAIN QUERY PLAN and returns the result.
         """
-        pass
+        cursor = self.conn.execute(f"EXPLAIN QUERY PLAN {query}")
+        return cursor.fetchall()
 
     def benchmark_query(self, query: str, iterations: int = 100) -> float:
         """
-        TODO: [... logic ...] 
+        Benchmarks a query and returns the average execution time.
         """
-        pass
+        start_time = time.time()
+        for _ in range(iterations):
+            self.conn.execute(query).fetchall()
+        return (time.time() - start_time) / iterations
 
 if __name__ == "__main__":
     import tempfile
@@ -41,14 +58,16 @@ if __name__ == "__main__":
         db_file = os.path.join(tmp, "analytics.db")
         analyzer = SQLAnalyzer(db_file)
 
-        # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        zer.setup_mock_data()
+        analyzer.setup_mock_data()
 
         bad_query = "SELECT * FROM users WHERE age > 30 AND status = 'active'"
         good_query = "SELECT id, name FROM users WHERE id IN (SELECT user_id FROM transactions WHERE amount > 100)"
 
-        print(f"Explain [... logic ...] :\n{analyzer.explain_query(bad_query)}")
-        print(f"Benchmark [... logic ...] (bad): {analyzer.benchmark_query(bad_query):.4f}s")
+        print(f"Explain Query Plan for bad_query:\n{analyzer.explain_query(bad_query)}")
+        print(f"Benchmark bad_query (average over {100} iterations): {analyzer.benchmark_query(bad_query):.4f}s")
+        print(f"Explain Query Plan for good_query:\n{analyzer.explain_query(good_query)}")
+        print(f"Benchmark good_query (average over {100} iterations): {analyzer.benchmark_query(good_query):.4f}s")
+        print("Query Performance Analysis Complete.")
 ```
 
 ## 3. PROGRESSIVE HINTS

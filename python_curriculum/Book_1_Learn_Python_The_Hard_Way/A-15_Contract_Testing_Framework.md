@@ -90,7 +90,6 @@ class TestRunner:
         for name, method in methods:
             if not name.startswith("test_"):
                 continue
-
             try:
                 method()
                 print(f"PASSED: {name}")
@@ -110,7 +109,7 @@ class TestRunner:
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Successfully identifies tests [... logic ...] -coding `.add_test()` lines.
+- [ ] Successfully identifies tests without manually hard-coding `.add_test()` lines.
 - [ ] Exception failures do not crash the `TestRunner` itself; they are isolated per-test.
 - [ ] Correctly asserts exceptions being thrown.
 

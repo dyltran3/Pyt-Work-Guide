@@ -48,7 +48,7 @@ if __name__ == "__main__":
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
-Connecting [... logic ...] :
+Connecting using the socket module:
 
 ```python
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -88,19 +88,19 @@ def raw_http_get(host, path):
 ## 4. REAL-WORLD CONNECTIONS
 
 - **Libraries/Tools**: Core logic behind `requests`, `urllib3`, Nginx raw streams natively cleanly.
-- **Why do it manually**: Diagnosing "Malformed Packet" errors [... logic ...] gracefully. Comprehending protocol separation [... logic ...] 
+- **Why do it manually**: Diagnosing "Malformed Packet" errors or comprehending protocol separation.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Connects cleanly bypassing `requests` [... logic ...] 
-- [ ] Constructs structural correctly encoded `\r\n\r\n` [... logic ...] 
-- [ ] Parses status [... logic ...] 
+- [ ] Connects cleanly bypassing `requests`.
+- [ ] Constructs structural correctly encoded `\r\n\r\n` lines.
+- [ ] Parses status codes correctly.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (HTTPS Wrap):** Socket 80 natively executes [... logic ...] -encrypted [... logic ...] 443 [... logic ...] `ssl`. Utilize `ssl.create_default_context().wrap_socket(sock)` [... logic ...] 
-2. **Extension 2 (Chunked Transfer):** Web servers [... logic ...] [... logic ...] 
-3. **Extension 3 (POST Requests):** POST requests [... logic ...] implement payload strings [... logic ...] 
+1. **Extension 1 (HTTPS Wrap):** Socket 80 natively executes non-encrypted requests. For port 443, use `ssl.create_default_context().wrap_socket(sock)`.
+2. **Extension 2 (Chunked Transfer):** Support chunked transfer encoding.
+3. **Extension 3 (POST Requests):** Implement POST payloads.
 
 ## SETUP REQUIREMENTS
 

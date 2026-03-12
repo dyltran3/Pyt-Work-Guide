@@ -28,20 +28,25 @@ app = FastAPI(title=settings.app_name)
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     """
-    TODO: [... logic ...] 
+    Middleware to measure and log request processing time.
     """
-    pass
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    logging.info(f"Path: {request.url.path} | Method: {request.method} | Time: {process_time:.4f}s")
+    return response
 
 # --- DEPENDENCIES ---
 async def get_db_session():
     """
-    TODO: [... logic ...] 
+    Dependency injection for database sessions.
     """
     db = "mock_db_connection"
     try:
         yield db
     finally:
-        pass # Close [... logic ...] 
+        pass # Close the mock connection here
 
 # --- ROUTES ---
 class User(BaseModel):
@@ -55,9 +60,13 @@ async def health_check():
 @app.get("/users/{user_id}", response_model=User)
 async def get_user(user_id: int, db = Depends(get_db_session)):
     """
-    TODO: [... logic ...] 
+    Endpoint to retrieve a user by ID.
     """
-    pass
+    mock_users = {1: {"id": 1, "name": "Alice"}}
+    user = mock_users.get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -75,7 +84,6 @@ async def add_process_time_header(request: Request, call_next):
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = str(process_time)
 
-    # Simple JSON [... logic ...] 
     logging.info(f"{{'path': '{request.url.path}', 'method': '{request.method}', 'time': {process_time:.4f}}}")
     return response
 ```
@@ -88,7 +96,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     logging.error(f"Failed cleanly: {exc}")
     return JSONResponse(
         status_code=500,
-        content={"message": "Internal Server [... logic ...] "}
+        content={"message": "Internal Server Error. Please contact support."}
     )
 ```
 
@@ -98,7 +106,9 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] [... logic ...] 
+- [ ] Correctly uses Middleware for cross-cutting concerns like logging.
+- [ ] Implements Dependency Injection for database sessions.
+- [ ] Provides standard error handling and response formatting.
 
 ## 6. EXTENSION CHALLENGES
 

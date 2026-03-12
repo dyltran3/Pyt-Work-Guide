@@ -56,7 +56,7 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-`asyncio.Semaphore` operates [... logic ...] network request utilizing an `async with semaphore:` [...].
+`asyncio.Semaphore` operates as a gatekeeper, ensuring that the critical section of a network request utilizing an `async with semaphore:` block is only entered by a fixed number of coroutines simultaneously.
 
 **HINT-2 (Partial)**:
 For the `fetch` function:
@@ -96,15 +96,15 @@ async def main_crawler(urls: list[str], max_concurrent=10):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Correctly utilizes `async/await` syntax [... logic ...] 
-- [ ] Safe [...] [... logic ...] `#Semaphore`.
-- [ ] Bypasses synchronous time limits cleanly executing 50 massive requests [... logic ...] cleanly.
+- [ ] Correctly utilizes `async/await` syntax for non-blocking I/O.
+- [ ] Safely limits concurrent requests using `asyncio.Semaphore`.
+- [ ] Bypasses synchronous time limits by executing hundreds of requests in parallel efficiently.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Timeout Fallback):** Even with async, [...] [... logic ...] `asyncio.wait_for(task, timeout=2.0)` inside the `fetch` wrapper block. If it times out [... logic ...] `asyncio.TimeoutError` [... logic ...] `(url, -1)`.
-2. **Extension 2 (Real Time Reporting):** `asyncio.gather` returns nothing until ALL operations conclude successfully. Switch to utilizing `asyncio.as_completed(tasks)`. Loop [...] _the exact millisecond_ they return [... logic ...] 
-3. **Extension 3 (Async Queue Workers):** Instead of a strict list iteration, build an `asyncio.Queue`. Fill it with 1000 URLs [... logic ...] 10 "Worker Tasks" holding loops indefinitely popping URLs [... logic ...] 
+1. **Extension 1 (Timeout Fallback):** Even with async, some requests might hang. Wrap the fetch coroutine in `asyncio.wait_for(task, timeout=2.0)` inside the `fetch` wrapper block. If it times out, catch the `asyncio.TimeoutError` and return `(url, -1)`.
+2. **Extension 2 (Real Time Reporting):** `asyncio.gather` returns nothing until ALL operations conclude successfully. Switch to utilizing `asyncio.as_completed(tasks)`. Loop through the results as they arrive _the exact millisecond_ they return from the network.
+3. **Extension 3 (Async Queue Workers):** Instead of a strict list iteration, build an `asyncio.Queue`. Fill it with 1000 URLs and spawn 10 "Worker Tasks" holding loops indefinitely popping URLs for processing until the queue is empty.
 
 ## SETUP REQUIREMENTS
 

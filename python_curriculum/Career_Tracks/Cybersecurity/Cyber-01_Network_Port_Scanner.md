@@ -16,7 +16,8 @@ import time
 class PortScanner:
     def __init__(self, target: str, timeout: float = 1.0):
         """
-        TODO: [... logic ...] 
+        Initializes the scanner with a target host and timeout.
+        Resolves hostname to IP address for faster scanning.
         """
         self.target = target
         self.timeout = timeout
@@ -25,32 +26,43 @@ class PortScanner:
         try:
             self.ip = socket.gethostbyname(target)
         except socket.gaierror:
-            raise ValueError(f"Could intelligently resolve [... logic ...] : {target}")
+            raise ValueError(f"Could not resolve target host: {target}")
 
     def scan_port(self, port: int) -> bool:
         """
-        TODO: [... logic ...] 
+        Attempts to connect to a specific TCP port using a socket.
         """
-        pass
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.settimeout(self.timeout)
+                result = sock.connect_ex((self.ip, port))
+                return result == 0
+        except Exception:
+            return False
 
     def scan_range(self, start_port: int, end_port: int, max_workers: int = 50) -> list:
         """
-        TODO: [... logic ...] 
-        Return [... logic ...] [... logic ...] 
+        Scans a range of ports concurrently using multiple threads.
         """
-        pass
+        open_ports = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_port = {executor.submit(self.scan_port, port): port for port in range(start_port, end_port + 1)}
+            for future in concurrent.futures.as_completed(future_to_port):
+                if future.result():
+                    open_ports.append(future_to_port[future])
+        return sorted(open_ports)
 
 if __name__ == "__main__":
-    target_host = "scanme.nmap.org"  # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        print(f"Scanning [... logic ...] {target_host}...")
+    target_host = "scanme.nmap.org"
+    print(f"Scanning target host: {target_host}...")
     scanner = PortScanner(target_host, timeout=0.5)
 
     start_time = time.time()
     open_ports = scanner.scan_range(1, 1024, max_workers=100)
     end_time = time.time()
 
-    print(f"Scan [... logic ...] {end_time - start_time:.2f} [... logic ...] ")
-    print(f"Open [... logic ...] : {open_ports}")
+    print(f"Scan completed in {end_time - start_time:.2f} seconds.")
+    print(f"Open ports found: {open_ports}")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -65,8 +77,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 sock.settimeout(self.timeout)
-                # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        0 [... logic ...] 
+                sock.settimeout(self.timeout)
                 result = sock.connect_ex((self.ip, port))
                 return result == 0
         except Exception:
@@ -99,7 +110,10 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Mã nguồn chạy thành công không báo lỗi, đạt hiệu năng tiêu chuẩn và cover được các test cases ẩn.
+- [ ] Correctly resolves hostname to IP address.
+- [ ] Efficiently scans a range of ports using multi-threading.
+- [ ] Correctly identifies open ports using TCP connect scan.
+- [ ] Implements a configurable timeout to avoid long hangs.
 
 ## 6. EXTENSION CHALLENGES
 

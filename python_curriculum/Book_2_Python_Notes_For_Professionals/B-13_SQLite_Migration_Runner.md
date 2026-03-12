@@ -20,20 +20,42 @@ class MigrationRunner:
 
     def _ensure_history_table(self):
         """
-        TODO: Create a table 'schema_history' if it doesn't already exist.
-        Columns: id, version_name, applied_at
+        Creates a table 'schema_history' if it doesn't already exist.
+        Columns: id (Primary Key), version_name (Unique), applied_at (Timestamp)
         """
-        pass
+        self.conn.execute('''
+            CREATE TABLE IF NOT EXISTS schema_history(
+                id INTEGER PRIMARY KEY,
+                version_name TEXT UNIQUE,
+                applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        self.conn.commit()
 
     def run_migrations(self):
         """
-        TODO:
-        1. Read all .sql files in self.migrations_dir sorted alphabetically.
-        2. Filter out scripts already applied (check schema_history).
-        3. Read content, execute sql, and log success to history.
-        4. Wrap in a transaction natively!
+        Main runner: reads, filters, and executes .sql files in transactions.
         """
-        pass
+        sql_files = sorted(f for f in os.listdir(self.migrations_dir) if f.endswith('.sql'))
+        for fname in sql_files:
+            # Check if applied
+            cur = self.conn.execute("SELECT 1 FROM schema_history WHERE version_name = ?", (fname,))
+            if cur.fetchone():
+                continue
+
+            with open(os.path.join(self.migrations_dir, fname)) as f:
+                sql = f.read()
+            
+            try:
+                self.conn.execute("BEGIN")
+                self.conn.executescript(sql)
+                self.conn.execute("INSERT INTO schema_history (version_name) VALUES (?)", (fname,))
+                self.conn.execute("COMMIT")
+                print(f"Applied: {fname}")
+            except Exception as e:
+                self.conn.execute("ROLLBACK")
+                print(f"Failed {fname}: {e}")
+                raise
 
 if __name__ == "__main__":
     import tempfile
@@ -46,7 +68,7 @@ if __name__ == "__main__":
         runner = MigrationRunner("test.db", tmp_dir)
         runner.run_migrations()
 
-        print("Migrations [... logic ...] ")
+        print("Migrations completed successfully.")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -55,7 +77,7 @@ if __name__ == "__main__":
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
-[... logic ...] 
+    # Implementation details for migration history tracking.
 
 **HINT-3 (Near-solution)**:
 
@@ -73,17 +95,18 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: Alembic, Django Migrations [... logic ...] 
+- **Libraries/Tools**: Alembic, Django Migrations, Flyway (for non-Python).
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Connects [... logic ...] 
-- [ ] Validates [... logic ...] 
+- [ ] Correcty applies new SQL migration files.
+- [ ] Remains idempotent (doesn't re-run applied migrations).
+- [ ] Rollbacks correctly on SQL error.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1:** [... logic ...] 
-2. **Extension 2:** [... logic ...] 
+1. **Extension 1:** Add support for "Down" migrations (rollback/undo logic).
+2. **Extension 2:** Implement a checksum/hash validation for each migration file to detect if a file was modified after being applied.
 
 ## SETUP REQUIREMENTS
 

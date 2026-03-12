@@ -5,16 +5,15 @@
 **Context**: Mô hình ReAct (Reasoning and Acting) Agent cho phép AI duy trì Thought Process logic qua nhiều Step, suy luận trước khi Search và ra lệnh. Là hạt nhân cốt lõi LangChain / AutoGPT.
 **Task**: Sử dụng String Parser Loop Workflow điều hướng Agent (Thought - Action - Observation Loop). Duy trì Conversation History vòng lặp đệ quy tới khi LLM trả về Final Answer.
 **Constraints**: Regex Parser format Action chính xác. Giới hạn Depth recursion (tối đa 5 lượt gọi) ngăn vòng lặp vĩnh viễn (Infinite loop).
-## 2. STARTER CODE
-
 ```python
 import json
 
 class ReActAgent:
-    def __init__(self):
+    def __init__(self, agent_core):
         """
-        TODO: [... logic ...] 
+        Adds CoT reasoning capabilities to the agent.
         """
+        self.core = agent_core
         self.history = []
 
     def log_thought(self, thought: str):
@@ -31,8 +30,7 @@ class ReActAgent:
 
     def run_step(self, question: str):
         """
-        TODO: [... logic ...] 
-        Implement [... logic ...] 
+        # Implement the main reasoning loop.
         """
         pass
 
@@ -40,25 +38,25 @@ class ReActAgent:
 def search_wiki(query: str) -> str:
     # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
         data = {
-        "Python": "Python [... logic ...] ",
-        "Guido van Rossum": "Guido [... logic ...] "
+        "Python": "Python is a high-level programming language.",
+        "Guido van Rossum": "Guido van Rossum is the creator of Python."
     }
-    return data.get(query, f"No [... logic ...] {query}")
+    return data.get(query, f"No information found for {query}")
 
 if __name__ == "__main__":
     agent = ReActAgent()
 
     # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        agent.log_thought("I [... logic ...] ")
+    agent.log_thought("I need to find out about Python.")
     agent.log_action("search", "Python")
     agent.log_observation(search_wiki("Python"))
 
-    agent.log_thought("Python [... logic ...] ")
+    agent.log_thought("Python is interesting. Let's find its creator.")
     agent.log_action("search", "Guido van Rossum")
     agent.log_observation(search_wiki("Guido van Rossum"))
 
-    agent.log_thought("I [... logic ...] ")
-    print("\n[ANSWER ] Guido [... logic ...] ")
+    agent.log_thought("I have found the answer.")
+    print("\n[ANSWER ] Guido van Rossum created Python.")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -73,7 +71,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
         self.history = []
         self.tools = {"search": search_wiki}
         self.system_prompt = """
-        You [... logic ...] 
+        You are a reasoning agent.
         Action: <tool_name>
         Action Input: <input>
         """
@@ -97,7 +95,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: `LangChain [... logic ...] `` và các framework chuẩn công nghiệp khác.
+- **Libraries/Tools**: `LangChain`, `AutoGPT`, `Haystack`.
 
 ## 5. VALIDATION CRITERIA
 

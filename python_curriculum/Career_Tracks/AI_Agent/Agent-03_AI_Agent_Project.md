@@ -14,7 +14,7 @@ import json
 class PersonalAssistantAgent:
     def __init__(self, name: str = "Alfred"):
         """
-        TODO: [... logic ...] 
+        Initializes the assistant with a name, empty memory, and tool registry.
         """
         self.name = name
         self.memory = {}
@@ -22,25 +22,37 @@ class PersonalAssistantAgent:
 
     def add_tool(self, name: str, func: callable):
         """
-        TODO: [... logic ...] 
+        Registers a tool function to be used by the agent.
         """
         self.tools[name] = func
 
     def remember(self, key: str, value: str):
         """
-        TODO: [... logic ...] 
+        Stores information in the local dictionary memory.
         """
         self.memory[key] = value
-        print(f"[{self.name}] [... logic ...] {key}.")
+        print(f"[{self.name}] I've remembered that {key} is {value}.")
 
     def recall(self, key: str) -> str:
-        return self.memory.get(key, f"I [... logic ...] {key}.")
+        """
+        Retrieves information from memory.
+        """
+        return self.memory.get(key, f"I don't have any information about {key}.")
 
     def process_command(self, command: str) -> str:
         """
-        TODO: [... logic ...] 
+        Routes the command to either a tool or a memory recall.
         """
-        pass
+        cmd = command.lower()
+        if "time" in cmd and "time" in self.tools:
+            return f"The current time is {self.tools['time']()}"
+        elif "calculate" in cmd and "calc" in self.tools:
+            expr = cmd.split("calculate")[-1].strip()
+            return f"The result of {expr} is {self.tools['calc'](expr)}"
+        elif "recall" in cmd or "what is" in cmd:
+            key = cmd.split()[-1]
+            return self.recall(key)
+        return "I'm not sure how to handle that command yet."
 
 if __name__ == "__main__":
     def get_time():
@@ -49,20 +61,17 @@ if __name__ == "__main__":
 
     def calculate(expression: str):
         try:
-            # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        return str(eval(expression, {"__builtins__": None}, {}))
+            return str(eval(expression, {"__builtins__": None}, {}))
         except:
-            return "Error [... logic ...] "
+            return "Error: calculation failed"
 
     agent = PersonalAssistantAgent("Jarvis")
     agent.add_tool("time", get_time)
     agent.add_tool("calc", calculate)
 
-    # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        agent.remember("user_name", "TuanAnh")
-
+    agent.remember("user_name", "TuanAnh")
     print(agent.recall("user_name"))
-    print(f"Tool [... logic ...] : {agent.tools['calc']('5 * 8')}")
+    print(f"Assistant: {agent.process_command('calculate 10 * 10')}")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -71,29 +80,21 @@ if __name__ == "__main__":
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
+Sử dụng `eval()` một cách an toàn bằng cách giới hạn `__builtins__` như trong ví dụ trên.
 
-```python
-    def process_command(self, command: str) -> str:
-        cmd = command.lower()
-        if "time" in cmd and "time" in self.tools:
-            return f"The [... logic ...] : {self.tools['time']()}"
-        elif "calculate" in cmd and "calc" in self.tools:
-            # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        expr = cmd.split("calculate")[1].strip()
-            return f"The [... logic ...] {expr} cleanly {self.tools['calc'](expr)}"
-```
+**HINT-3 (Near-solution)**:
+Có thể mở rộng thêm tính năng `Persistent Memory` bằng cách lưu `self.memory` vào một file JSON khi agent tắt.
 
 **HINT-3 (Near-solution)**:
 
 ```python
-    # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
         def start_cli(self):
-        print(f"[{self.name}] [... logic ...] ")
+        print(f"[{self.name}] Assistant is online.")
         while True:
             try:
                 user_input = input("You: ")
                 if user_input.lower() in ['exit', 'quit']:
-                    print(f"[{self.name}] [... logic ...] !")
+                    print(f"[{self.name}] Goodbye!")
                     break
 
                 response = self.process_command(user_input)

@@ -105,7 +105,7 @@ def generate_report(self) -> str:
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Subclasses [... logic ...] `check()` method perfectly.
+- [ ] Subclasses implement the `check()` method perfectly.
 - [ ] Output perfectly aligns with JSON specification (boolean states, integers not quoted).
 - [ ] Aggregation logic successfully infers a global `DOWN` state if _a single_ child service reports failure.
 
@@ -113,7 +113,7 @@ def generate_report(self) -> str:
 
 1. **Extension 1 (Using @property):** Modify the `generate_report` structure so that `system_status` isn't a manually calculated string, but a dynamic `@property` attached to the `HealthReport` class that is constantly calculated on access.
 2. **Extension 2 (Real System Checks):** Make `DiskCheck` no longer simulated. Use Python's `shutil.disk_usage("/")` module to actually parse the hard drive of the executing computer and return actual gigabyte strings.
-3. **Extension 3 (Async Execution):** In a production scenario with 20 microservices, [...]. Convert the classes mathematically so `.check()` is `async def`. Have `generate_report()` utilize `asyncio.gather()` to execute all checks concurrently.
+3. **Extension 3 (Async Execution):** In a production scenario with 20 microservices, sequential checking is too slow. Convert the classes so `.check()` is `async def`. Have `generate_report()` utilize `asyncio.gather()` to execute all checks concurrently.
 
 ## SETUP REQUIREMENTS
 

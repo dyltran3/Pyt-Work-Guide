@@ -16,15 +16,27 @@ class App:
 
     def route(self, path: str):
         """
-        TODO: Build a decorator [... logic ...] 
+        Decorator to register a function as a handler for a specific URL path.
         """
-        pass
+        def wrapper(handler):
+            self.routes[path] = handler
+            return handler
+        return wrapper
 
     def __call__(self, environ: dict, start_response):
         """
-        TODO: Implement the required WSGI standard interface [... logic ...] 
+        WSGI standard interface. Routes the request based on PATH_INFO.
         """
-        pass
+        path = environ.get('PATH_INFO', '/')
+        handler = self.routes.get(path)
+        
+        if handler:
+            response_body = handler(environ)
+            start_response('200 OK', [('Content-Type', 'text/html')])
+            return [response_body.encode('utf-8')]
+        else:
+            start_response('404 NOT FOUND', [('Content-Type', 'text/plain')])
+            return [b'Not Found']
 
 if __name__ == "__main__":
     app = App()
@@ -37,10 +49,10 @@ if __name__ == "__main__":
     def api_res(environ):
         return '{"status": "ok"}'
 
-    # To test [... logic ...] 
-    # server = make_server('localhost', 8080, app)
-    # print("Running on port 8080...")
-    # server.serve_forever()
+    # To test locally:
+    server = make_server('localhost', 8080, app)
+    print("Running on port 8080...")
+    server.serve_forever()
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -49,7 +61,7 @@ if __name__ == "__main__":
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
-Constructing [... logic ...] 
+Constructing a routing map allows O(1) lookups for incoming requests, making the framework scalable as more endpoints are added.
 
 **HINT-3 (Near-solution)**:
 
@@ -75,17 +87,17 @@ Constructing [... logic ...]
 
 ## 4. REAL-WORLD CONNECTIONS
 
-- **Libraries/Tools**: Flask [... logic ...] 
+- **Libraries/Tools**: Flask, Django, Gunicorn, uWSGI.
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Connects [... logic ...] 
-- [ ] [... logic ...] 
+- [ ] Connects and routes requests correctly using WSGI.
+- [ ] Handles 404 Not Found scenarios gracefully.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1:** [... logic ...] 
-2. **Extension 2:** [... logic ...] 
+1. **Extension 1:** Add support for dynamic URL parameters (e.g., `/user/<id>`) using regex matching.
+2. **Extension 2:** Implement a request context (like `flask.request`) to simplify how handlers access environment data.
 
 ## SETUP REQUIREMENTS
 

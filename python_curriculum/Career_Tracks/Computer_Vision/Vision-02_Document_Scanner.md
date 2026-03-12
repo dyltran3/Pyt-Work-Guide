@@ -14,14 +14,13 @@ import numpy as np
 class DocumentScanner:
     def __init__(self):
         """
-        TODO: [... logic ...] 
+        Initializes the document scanner tool.
         """
         pass
 
     def order_points(self, pts):
         """
-        TODO: [... logic ...] 
-        pts [... logic ...] 
+        Orders four points in (top-left, top-right, bottom-right, bottom-left) order.
         """
         rect = np.zeros((4, 2), dtype="float32")
         # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
@@ -37,19 +36,44 @@ class DocumentScanner:
 
     def four_point_transform(self, image, pts):
         """
-        TODO: [... logic ...] 
+        Applies a perspective transform to create a top-down view of the document.
         """
-        pass
+        rect = self.order_points(pts)
+        (tl, tr, br, bl) = rect
+        widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
+        widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+        maxWidth = max(int(widthA), int(widthB))
+        heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
+        heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+        maxHeight = max(int(heightA), int(heightB))
+        dst = np.array([[0, 0], [maxWidth - 1, 0], [maxWidth - 1, maxHeight - 1], [0, maxHeight - 1]], dtype="float32")
+        M = cv2.getPerspectiveTransform(rect, dst)
+        return cv2.warpPerspective(image, M, (maxWidth, maxHeight))
 
     def scan(self, image_path: str, output_path: str):
-         """
-         TODO: [... logic ...] 
-         """
-         pass
+        """
+        Detects, crops, and enhances a document in an image.
+        """
+        image = cv2.imread(image_path)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        edged = cv2.Canny(blurred, 75, 200)
+        cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
+        cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
+        for c in cnts:
+            peri = cv2.arcLength(c, True)
+            approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+            if len(approx) == 4:
+                warped = self.four_point_transform(image, approx.reshape(4, 2))
+                warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+                T = cv2.adaptiveThreshold(warped, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+                cv2.imwrite(output_path, T)
+                return
+        print("No document found in image.")
 
 if __name__ == "__main__":
     # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
-        print("Please [... logic ...] !")
+        print(f"Optimization complete. Best result: {result}")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -109,7 +133,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
                 break
 
         if screenCnt is None:
-            print("Could [... logic ...] ")
+            print("Could not find document!")
             return
 
         warped = self.four_point_transform(orig, screenCnt.reshape(4, 2))
@@ -119,7 +143,7 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
         T = cv2.adaptiveThreshold(warped, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 
         cv2.imwrite(output_path, T)
-        print(f"Scanned [... logic ...] {output_path}")
+        print(f"Scanned output saved to: {output_path}")
 ```
 
 ## 4. REAL-WORLD CONNECTIONS

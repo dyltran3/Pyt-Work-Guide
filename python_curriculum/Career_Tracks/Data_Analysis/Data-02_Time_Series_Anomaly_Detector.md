@@ -12,44 +12,50 @@ import pandas as pd
 import numpy as np
 
 class TimeSeriesAnomalyDetector:
-    def __init__(self, window_size: int = 5, threshold: float = 2.0):
+    def __init__(self, threshold: float = 3.0):
         """
-        TODO: [... logic ...] 
+        Initializes the detector with a sensitivity threshold.
         """
-        self.window_size = window_size
         self.threshold = threshold
 
     def detect_zscore(self, series: pd.Series) -> pd.Series:
         """
-        TODO: [... logic ...] 
+        Detects anomalies using global Z-score (standard deviations from mean).
         """
-        pass
+        mean = series.mean()
+        std = series.std()
+        z_scores = (series - mean) / std
+        return z_scores.abs() > self.threshold
 
-    def detect_rolling_mean(self, series: pd.Series) -> pd.Series:
+    def detect_rolling(self, series: pd.Series, window: int = 10) -> pd.Series:
         """
-        TODO: [... logic ...] 
+        Detects anomalies using a rolling mean/std window for local variance.
         """
-        pass
+        rolling_mean = series.rolling(window=window).mean()
+        rolling_std = series.rolling(window=window).std()
+        z_scores = (series - rolling_mean) / rolling_std
+        return z_scores.abs() > self.threshold
 
 if __name__ == "__main__":
     dates = pd.date_range("20230101", periods=100)
     data = np.random.normal(loc=100, scale=10, size=100)
 
-    # Inject [... logic ...] 
+    # Inject some anomalies for testing
     data[20] = 500
     data[75] = -200
 
     ts = pd.Series(data, index=dates)
 
-    detector = TimeSeriesAnomalyDetector(window_size=10, threshold=3.0)
+    detector = TimeSeriesAnomalyDetector(threshold=3.0)
 
     anomalies_z = detector.detect_zscore(ts)
-    anomalies_rolling = detector.detect_rolling_mean(ts)
+    anomalies_rolling = detector.detect_rolling(ts, window=10)
 
-    print("Z-Score [... logic ...] :")
+    print("Z-Score Anomalies:")
     print(ts[anomalies_z])
-    print("\nRolling [... logic ...] :")
+    print("\nRolling Mean/Std Anomalies:")
     print(ts[anomalies_rolling])
+    print("\nAnomaly Detection Process Complete")
 ```
 
 ## 3. PROGRESSIVE HINTS

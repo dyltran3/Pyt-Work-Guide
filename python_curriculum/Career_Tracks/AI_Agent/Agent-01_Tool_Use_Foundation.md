@@ -12,35 +12,49 @@ import json
 import requests
 
 class SimpleAgentCore:
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str = "mock"):
         """
-        TODO: [... logic ...] 
+        Initializes the agent core with an optional API key and empty tool registry.
         """
+        self.api_key = api_key
+        self.tools: list[dict] = []
+        self._registry: dict[str, callable] = {}
         self.api_key = api_key
         self.tools = []
 
     def register_tool(self, name: str, description: str, parameters: dict, func: callable):
         """
-        TODO: [... logic ...] 
+        Registers a tool with its JSON schema and execution handler.
         """
-        pass
+        self.tools.append({
+            "type": "function",
+            "function": {"name": name, "description": description, "parameters": parameters}
+        })
+        self._registry[name] = func
 
     def call_llm(self, prompt: str) -> dict:
         """
-        TODO: [... logic ...] 
-        (Mock this [... logic ...] )
+        Mocks an LLM call by returning a pre-defined tool call based on keywords.
         """
-        pass
+        if "weather" in prompt:
+            return {"name": "get_weather", "arguments": {"location": "London"}}
+        return {"name": "calculate_sum", "arguments": {"a": 10, "b": 20}}
 
     def execute_tool(self, tool_name: str, arguments: dict):
         """
-        TODO: [... logic ...] 
+        Safely executes a registered tool function.
         """
-        pass
+        func = self._registry.get(tool_name)
+        if not func:
+            return f"Error: Tool '{tool_name}' not found"
+        try:
+            return func(**arguments)
+        except Exception as e:
+            return f"Error: {e}"
 
-# --- MOCK TOOLS [... logic ...] ---
+# --- MOCK TOOLS ---
 def get_weather(location: str) -> str:
-    return f"The [... logic ...] {location} [... logic ...] "
+    return f"The weather in {location} is currently Sunny, 22°C"
 
 def calculate_sum(a: int, b: int) -> int:
     return a + b
@@ -50,14 +64,14 @@ if __name__ == "__main__":
 
     agent.register_tool(
         name="get_weather",
-        description="Get [... logic ...] ",
+        description="Get the current weather in a given location",
         parameters={"type": "object", "properties": {"location": {"type": "string"}}, "required": ["location"]},
         func=get_weather
     )
 
     agent.register_tool(
         name="calculate_sum",
-        description="Add [... logic ...] ",
+        description="Add two numbers together",
         parameters={"type": "object", "properties": {"a": {"type": "integer"}, "b": {"type": "integer"}}, "required": ["a", "b"]},
         func=calculate_sum
     )
@@ -69,9 +83,9 @@ if __name__ == "__main__":
     ]
 
     for call in tool_calls:
-        print(f"Executing [... logic ...] {call['name']}...")
+        print(f"Executing tool call for {call['name']}...")
         result = agent.execute_tool(call["name"], call["arguments"])
-        print(f"Result [... logic ...] : {result}")
+        print(f"Result returned: {result}")
 ```
 
 ## 3. PROGRESSIVE HINTS
@@ -100,14 +114,14 @@ Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary
     def execute_tool(self, tool_name: str, arguments: dict):
         tool = next((t for t in self.tools if t["function"]["name"] == tool_name), None)
         if not tool:
-            return f"Error: [... logic ...] {tool_name} [... logic ...] "
+            return f"Error: registered tool '{tool_name}' not found locally."
 
         try:
             # TODO: Thay thế bằng code xử lý logic thực tế tại đây.
         result = tool["callable"](**arguments)
             return str(result)
         except Exception as e:
-            return f"Error [... logic ...] {e}"
+            return f"Error during tool execution: {e}"
 ```
 
 ## 4. REAL-WORLD CONNECTIONS

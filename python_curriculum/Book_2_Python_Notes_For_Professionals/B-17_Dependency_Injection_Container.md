@@ -17,21 +17,29 @@ class Container:
 
     def register(self, cls, provider):
         """
-        TODO: [... logic ...] 
+        Registers a factory provider that creates a new instance every time.
         """
-        pass
+        self._providers[cls] = {"type": "factory", "provider": provider}
 
     def register_singleton(self, cls, provider):
         """
-        TODO: [... logic ...] 
+        Registers a provider that creates and stores a single shared instance.
         """
-        pass
+        self._providers[cls] = {"type": "singleton", "provider": provider}
 
     def resolve(self, cls):
         """
-        TODO: [... logic ...] 
+        Resolves a type to its instance, handling singleton vs factory lifecycle.
         """
-        pass
+        if cls not in self._providers:
+            raise ValueError(f"No provider registered for {cls.__name__}")
+            
+        reg = self._providers[cls]
+        if reg["type"] == "singleton":
+            if cls not in self._singletons:
+                self._singletons[cls] = reg["provider"](self)
+            return self._singletons[cls]
+        return reg["provider"](self)
 
 if __name__ == "__main__":
     class Database:
@@ -90,7 +98,9 @@ def resolve(self, cls):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Incorporates [... logic ...] 
+- [ ] Correctly distinguishes between Singleton and Factory lifecycles.
+- [ ] Successfully resolves dependencies recursively.
+- [ ] Handles missing provider errors gracefully.
 
 ## 6. EXTENSION CHALLENGES
 

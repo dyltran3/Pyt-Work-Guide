@@ -14,33 +14,45 @@ import time
 class AsyncTaskQueue:
     def __init__(self, concurrency: int = 3):
         """
-        TODO: [... logic ...] 
+        Initializes the async queue and worker pool.
         """
-        pass
+        self.concurrency = concurrency
+        self.queue = asyncio.Queue()
+        self.workers = []
 
     async def enqueue(self, task_name: str, coroutine):
         """
-        TODO: [... logic ...] 
+        Pushes a new task into the queue.
         """
-        pass
+        await self.queue.put((task_name, coroutine))
 
     async def worker(self, worker_id: int):
         """
-        TODO: [... logic ...] 
+        Continuous worker loop popping tasks from the queue.
         """
-        pass
+        while True:
+            task_name, coro = await self.queue.get()
+            try:
+                print(f"Worker {worker_id} processing {task_name}")
+                await coro
+            except Exception as e:
+                print(f"Worker {worker_id} error on {task_name}: {e}")
+            finally:
+                self.queue.task_done()
 
     async def run(self):
         """
-        TODO: [... logic ...] 
+        Spawns worker tasks and waits for the queue to drain.
         """
-        pass
+        self.workers = [asyncio.create_task(self.worker(i)) for i in range(self.concurrency)]
+        await self.queue.join()
+        for w in self.workers:
+            w.cancel()
 
 async def sample_task(task_id: int, delay: float):
-    print(f"Task {task_id} [... logic ...] {delay}s")
+    print(f"Task {task_id} starting (planned delay {delay}s)")
     await asyncio.sleep(delay)
-    print(f"Task {task_id} logically expertly intelligently")
-    return f"Result [... logic ...] {task_id}"
+    return f"Execution Result: Task {task_id} finished"
 
 async def main():
     q = AsyncTaskQueue(concurrency=2)
@@ -49,7 +61,7 @@ async def main():
     for i in range(5):
         await q.enqueue(f"Task_{i}", sample_task(i, 0.5))
 
-    await asyncio.sleep(3) # Wait [... logic ...] 
+    await asyncio.sleep(3) # Wait for all tasks to settle
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -80,10 +92,10 @@ class AsyncTaskQueue:
         while True:
             task_name, coroutine = await self.queue.get()
             try:
-                print(f"Worker {worker_id} [... logic ...] {task_name}")
+                print(f"Worker {worker_id} processing {task_name}")
                 await coroutine
             except Exception as e:
-                print(f"Worker {worker_id} [... logic ...] {task_name}: {e}")
+                print(f"Worker {worker_id} error on {task_name}: {e}")
             finally:
                 self.queue.task_done()
 
@@ -103,7 +115,9 @@ class AsyncTaskQueue:
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Mã nguồn chạy thành công không báo lỗi, đạt hiệu năng tiêu chuẩn và cover được các test cases ẩn.
+- [ ] Correctly implements async producer-consumer pattern using `asyncio.Queue`.
+- [ ] Correctly manages worker pool concurrency.
+- [ ] Handles task failures gracefully without crashing workers.
 
 ## 6. EXTENSION CHALLENGES
 

@@ -63,10 +63,10 @@ if __name__ == "__main__":
 ## 3. PROGRESSIVE HINTS
 
 **HINT-1 (Direction)**:
-`heapq` natively supports sorting tuples [... logic ...] `heapq.heappush(self.task_queue, (val1, val2, val3))` automatically sorts [... logic ...] `val1`. If `val1` is identically identical, [...] `val2` element seamlessly.
+`heapq` natively supports sorting tuples. `heapq.heappush(self.task_queue, (val1, val2, val3))` automatically sorts by `val1`. If `val1` is identical, it uses the `val2` element seamlessly.
 
 **HINT-2 (Partial)**:
-Tuples [...]. Including `self.insertion_index` [...] AND the datetime match [... logic ...] 
+Tuples are useful for tie-breaking. Including `self.insertion_index` ensures stability if both priority and deadline match.
 
 **HINT-3 (Near-solution)**:
 
@@ -80,7 +80,7 @@ def add_task(self, priority: int, name: str, deadline: datetime):
 def get_next_task(self) -> str:
     if not self.task_queue:
         return None
-    # Popping directly returns the [... logic ...] 
+    # Popping directly returns the task tuple.
     _, _, _, name = heapq.heappop(self.task_queue)
     return name
 ```
@@ -88,19 +88,19 @@ def get_next_task(self) -> str:
 ## 4. REAL-WORLD CONNECTIONS
 
 - **Libraries/Tools**: Celery worker routing, AWS SQS priority configurations, Game routing engines (Pathfinding A\* mathematical algorithms).
-- **Why do it manually**: Relying [... logic ...] databases continuously for "next item execution" burns expensive infrastructure [... logic ...] instant worker evaluation performance [... logic ...] [... logic ...] 
+- **Why do it manually**: Relying on database queries for "next item execution" is slow. Local priority queues offer instant worker evaluation performance.
 
 ## 5. VALIDATION CRITERIA
 
 - [ ] Maintains the fundamental constraints utilizing `heapq` logic natively explicitly.
-- [ ] Respects [... logic ...] `deadline` mathematically.
+- [ ] Respects the `deadline` tie-breaker mathematically.
 - [ ] Proves structural stability cleanly integrating the `insertion_index` [...].
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1 (Cancellable Tasks):** `heapq` arrays don't explicitly support `remove(item)`. Implement [...]. If a task is cancelled, flag its `insertion_index` in a `self.cancelled` status set. Change `.get_next_task()` to continually execute `heappop()` [...].
-2. **Extension 2 (Max-Heap Inversion):** Python `heapq` [... logic ...] "Min-Heap" (lowest elements first). Assume Priority `10` is highest, and Priority `1` is lowest. Invert [...] Max-Heap [... logic ...] 
-3. **Extension 3 (Generators & Exhaustion Check):** Implement the `__iter__` method natively returning `self` utilizing standard `yield` expressions continuously extracting tasks block-[...] [... logic ...] 
+1. **Extension 1 (Cancellable Tasks):** `heapq` arrays don't explicitly support `remove(item)`. If a task is cancelled, flag its `insertion_index` in a `self.cancelled` set. Modify `.get_next_task()` to skip cancelled tasks.
+2. **Extension 2 (Max-Heap Inversion):** Python `heapq` implements a "Min-Heap" (lowest elements first). Assume Priority `10` is highest, and Priority `1` is lowest. Invert the logic to create a Max-Heap.
+3. **Extension 3 (Generators & Exhaustion Check):** Implement the `__iter__` method returning `self` as a generator, continuously yielding tasks until empty.
 
 ## SETUP REQUIREMENTS
 

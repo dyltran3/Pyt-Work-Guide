@@ -30,7 +30,7 @@ class APIClient:
         TODO:
         Loop through the dictionary.
         For each 'endpoint_name', utilize `functools.partial` dynamically natively attaching
-        a callable [... logic ...] `self` context [... logic ...] 
+        a callable that binds the `self` context.
         """
         pass
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         "delete_user": {"method": "DELETE", "path": "/users/1"}
     }
 
-    # Notice we haven't written `def get_users()` anywhere [... logic ...] 
+    # Notice we haven't written `def get_users()` anywhere.
     client = APIClient("https://api.example.com", dummy_schema)
 
     res1 = client.get_users(params={"limit": 10})
@@ -60,14 +60,14 @@ if __name__ == "__main__":
 Phân tích kỹ lưỡng các cấu trúc dữ liệu cần thiết (Dictionary, Queue, Set) trước khi bắt tay vào code. Chia nhỏ bài toán thành các hàm độc lập.
 
 **HINT-2 (Partial)**:
-Using partial [... logic ...] 
+Using partial to bind methods:
 
 ```python
 # Inside _build_dynamic_methods:
 for func_name, route_info in spec.items():
     method = route_info['method']
     path = route_info['path']
-    # Bind _core_request [...] [... logic ...] 
+    # Bind _core_request to the new function name.
 ```
 
 **HINT-3 (Near-solution)**:
@@ -76,7 +76,7 @@ for func_name, route_info in spec.items():
 def _build_dynamic_methods(self, spec: dict):
     for func_name, route_info in spec.items():
         partial_func = functools.partial(self._core_request, method=route_info['method'], path=route_info['path'])
-        # Bind it to the instance [... logic ...] 
+        # Bind it to the instance dynamically.
         setattr(self, func_name, partial_func)
 ```
 
@@ -86,14 +86,14 @@ def _build_dynamic_methods(self, spec: dict):
 
 ## 5. VALIDATION CRITERIA
 
-- [ ] Successfully binds [... logic ...] 
-- [ ] Passes kwargs [... logic ...] 
+- [ ] Successfully binds dynamic methods.
+- [ ] Passes kwargs to the session request.
 
 ## 6. EXTENSION CHALLENGES
 
-1. **Extension 1:** [... logic ...] 
-2. **Extension 2:** [... logic ...] 
-3. **Extension 3:** [... logic ...] 
+1. **Extension 1:** Add response status code validation.
+2. **Extension 2:** Implement a timeout default.
+3. **Extension 3:** Support path parameters.
 
 ## SETUP REQUIREMENTS
 
