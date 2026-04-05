@@ -8,6 +8,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.text import Text
+from rich.markdown import Markdown
 
 # Path settings
 HOME_DIR = Path.home()
@@ -251,6 +252,7 @@ def update_streak(db):
     db["last_activity"] = today
 
 def init_tracker():
+    console.clear()
     db = load_db()
     os.makedirs(DB_DIR, exist_ok=True)
     save_db(db)
@@ -287,6 +289,7 @@ def set_status(ex_id, status):
 
 def show_roadmap(track_name: str):
     """Display career track roadmap with progress indicators."""
+    console.clear()
     track_key = track_name.lower().strip()
     
     # Aliases
@@ -389,6 +392,7 @@ def show_roadmap(track_name: str):
     console.print()
 
 def show_dashboard():
+    console.clear()
     config = load_config()
     db = load_db()
     exercises = config.get("exercises", [])
@@ -470,6 +474,37 @@ def export_report():
         f.write("\n".join(lines))
     console.print(f"[green]✓ Report exported to {report_path}[/green]")
 
+def find_exercise_file(ex_id):
+    """Resolve an exercise ID to its markdown file path."""
+    search_dirs = [
+        Path(__file__).parent / "Book_1_Learn_Python_The_Hard_Way",
+        Path(__file__).parent / "Book_2_Python_Notes_For_Professionals",
+        Path(__file__).parent / "Career_Tracks"
+    ]
+    
+    # Try direct glob first (e.g. A-01_*.md)
+    for sdir in search_dirs:
+        # Search recursively for Career_Tracks subfolders
+        matches = list(sdir.rglob(f"{ex_id}_*.md"))
+        if matches:
+            return matches[0]
+    return None
+
+def playback_exercise(ex_id):
+    """Render the exercise markdown in the terminal."""
+    console.clear()
+    file_path = find_exercise_file(ex_id)
+    if not file_path:
+        console.print(f"[red]Could not find markdown file for exercise '{ex_id}'[/red]")
+        return
+    
+    with open(file_path, "r", encoding="utf-8") as f:
+        md_content = f.read()
+    
+    console.print(Markdown(md_content))
+    console.print(f"\n[dim]File: {file_path}[/dim]")
+    console.print(f"[bold cyan]→ To mark as starting:[/bold cyan] python tracker.py start {ex_id}")
+
 # ─── Entry point ─────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
@@ -481,9 +516,11 @@ Commands:
   (no args)              Show full dashboard
   start  <ID>            Mark exercise as IN_PROGRESS
   done   <ID>            Mark exercise as DONE
+  unfinish <ID>          Mark exercise as IN_PROGRESS (undo completion)
   skip   <ID>            Mark exercise as SKIPPED
   reset  <ID>            Reset exercise to TODO
   roadmap <track>        Show career track roadmap + progress
+  playback <ID>          View exercise brief and hints in terminal
   --init                 Initialize tracker (run once)
   --export               Export markdown progress report
 
@@ -492,14 +529,16 @@ Career tracks for 'roadmap':
 
 Examples:
   python tracker.py roadmap data
+  python tracker.py playback Data-04
   python tracker.py start Data-04
   python tracker.py done  Data-04
+  python tracker.py unfinish Data-04
         """
     )
     parser.add_argument("--init",   action="store_true", help="Initialize tracker")
     parser.add_argument("--export", action="store_true", help="Export markdown report")
     parser.add_argument("action", nargs="?",
-                        choices=["done", "skip", "start", "reset", "roadmap"],
+                        choices=["done", "skip", "start", "reset", "roadmap", "unfinish", "playback"],
                         help="Action to perform")
     parser.add_argument("exercise_id", nargs="?",
                         help="Exercise ID (e.g. A-01) or track name (for roadmap)")
@@ -518,12 +557,18 @@ Examples:
                 console.print(f"  [cyan]{key:<12}[/cyan] {data['title']} ({data['duration']})")
         else:
             show_roadmap(args.exercise_id)
+    elif args.action == "playback":
+        if not args.exercise_id:
+            console.print("[yellow]Usage: python tracker.py playback <ID>[/yellow]")
+        else:
+            playback_exercise(args.exercise_id)
     elif args.action and args.exercise_id:
         status_map = {
-            "done":  "DONE",
-            "skip":  "SKIPPED",
-            "start": "IN_PROGRESS",
-            "reset": "TODO"
+            "done":     "DONE",
+            "skip":     "SKIPPED",
+            "start":    "IN_PROGRESS",
+            "reset":    "TODO",
+            "unfinish": "IN_PROGRESS"
         }
         set_status(args.exercise_id, status_map[args.action])
     else:

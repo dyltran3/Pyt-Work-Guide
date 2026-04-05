@@ -3,3 +3,4 @@ python_curriculum/update_specific_descriptions.py
 python_curriculum/docs/
 python_curriculum/answers/
 test.json
+.venv

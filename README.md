@@ -30,11 +30,13 @@ python python_curriculum/tracker.py --init
 # Xem dashboard tổng quan
 python python_curriculum/tracker.py
 
-# Xem lộ trình Career Track (Backend)
-python python_curriculum/tracker.py roadmap backend
+# Xem nội dung bài tập (Playback)
+python python_curriculum/tracker.py playback A-01
 
-# Đánh dấu bắt đầu làm bài A-01
-python python_curriculum/tracker.py start A-01
+# Đánh dấu trạng thái
+python python_curriculum/tracker.py start A-01     # Bắt đầu
+python python_curriculum/tracker.py done A-01      # Hoàn thành
+python python_curriculum/tracker.py unfinish A-01  # Hủy hoàn thành (quay lại In Progress)
 ```
 
 ---
